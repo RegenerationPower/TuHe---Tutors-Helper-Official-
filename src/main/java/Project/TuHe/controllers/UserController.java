@@ -3,7 +3,6 @@ package Project.TuHe.controllers;
 import Project.TuHe.entities.UserEntity;
 import Project.TuHe.exceptions.UserAlreadyExistException;
 import Project.TuHe.exceptions.UserNotFoundException;
-import Project.TuHe.repositories.UserRepository;
 import Project.TuHe.services.implementation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
