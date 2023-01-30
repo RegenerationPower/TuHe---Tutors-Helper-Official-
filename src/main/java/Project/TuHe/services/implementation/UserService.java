@@ -3,6 +3,7 @@ package Project.TuHe.services.implementation;
 import Project.TuHe.entities.UserEntity;
 import Project.TuHe.exceptions.UserAlreadyExistException;
 import Project.TuHe.exceptions.UserNotFoundException;
+import Project.TuHe.models.UserModel;
 import Project.TuHe.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserEntity getSpecificUser(Long id) throws UserNotFoundException {
+    public UserModel getSpecificUser(Long id) throws UserNotFoundException {
         UserEntity user = userRepository.findById(id).get();
-        if(user != null){
+        if(user == null){
             throw new UserNotFoundException("User not found");
         }
-        return user;
+        return UserModel.toModel(user);
+    }
+
+    public Long deleteUser(Long id) {
+        userRepository.deleteById(id);
+        return id;
     }
 }
