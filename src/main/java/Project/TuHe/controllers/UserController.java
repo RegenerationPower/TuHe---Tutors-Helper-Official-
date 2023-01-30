@@ -30,7 +30,6 @@ public class UserController {
     }
 
     @GetMapping
-    //@ResponseBody
     public ResponseEntity getSpecificUser(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(userService.getSpecificUser(id));
