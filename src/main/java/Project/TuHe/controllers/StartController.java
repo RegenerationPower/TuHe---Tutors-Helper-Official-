@@ -10,6 +10,6 @@ public class StartController {
     @GetMapping("/start")
     public String Main(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model){
         model.addAttribute("name", name);
-        return "startPage";
+        return "registerPage";
     }
 }

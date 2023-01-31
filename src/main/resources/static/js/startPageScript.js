@@ -1,77 +1,41 @@
 function registration()
 {
+    var userName= document.getElementById("textBox1").value;
+    var password= document.getElementById("textBox2").value;
+    var confirmPassword= document.getElementById("textBox3").value;
 
-    var name= document.getElementById("t1").value;
-    var email= document.getElementById("t2").value;
-    var uname= document.getElementById("t3").value;
-    var pwd= document.getElementById("t4").value;
-    var cpwd= document.getElementById("t5").value;
-
-    //email id expression code
-    var pwd_expression = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/;
-    var letters = /^[A-Za-z]+$/;
-    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-    if(name=='')
+    if(userName=='')
     {
-        alert('Please enter your name');
+        alert('Please enter user name');
     }
-    else if(!letters.test(name))
+    else if(password=='')
     {
-        alert('Name field required only alphabet characters');
+        alert('Please enter password');
     }
-    else if(email=='')
+    else if(confirmPassword=='')
     {
-        alert('Please enter your user email id');
+        alert('Confirm password');
     }
-    else if (!filter.test(email))
+    else if(password != confirmPassword)
     {
-        alert('Invalid email');
+        alert ('Password not matched');
     }
-    else if(uname=='')
+    else if(document.getElementById("textBox3").value.length < 5)
     {
-        alert('Please enter the user name.');
+        alert ('Password minimum length is 5');
     }
-    else if(!letters.test(uname))
+    else if(document.getElementById("textBox3").value.length > 20)
     {
-        alert('User name field required only alphabet characters');
-    }
-    else if(pwd=='')
-    {
-        alert('Please enter Password');
-    }
-    else if(cpwd=='')
-    {
-        alert('Enter Confirm Password');
-    }
-    else if(!pwd_expression.test(pwd))
-    {
-        alert ('Upper case, Lower case, Special character and Numeric letter are required in Password filed');
-    }
-    else if(pwd != cpwd)
-    {
-        alert ('Password not Matched');
-    }
-    else if(document.getElementById("t5").value.length < 6)
-    {
-        alert ('Password minimum length is 6');
-    }
-    else if(document.getElementById("t5").value.length > 12)
-    {
-        alert ('Password max length is 12');
+        alert ('Password maximum length is 20');
     }
     else
     {
-        alert('Thank You for Login & You are Redirecting to Campuslife Website');
-        // Redirecting to other page or webste code.
-        window.location = "http://www.campuslife.co.in";
+        alert('Registration is successful');
     }
 }
-function clearFunc()
+function clearFunction()
 {
-    document.getElementById("t1").value="";
-    document.getElementById("t2").value="";
-    document.getElementById("t3").value="";
-    document.getElementById("t4").value="";
-    document.getElementById("t5").value="";
+    document.getElementById("textBox1").value="";
+    document.getElementById("textBox2").value="";
+    document.getElementById("textBox3").value="";
 }
