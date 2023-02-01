@@ -4,10 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Tutors Helper - starter page</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/startPageStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/registerPageStyle.css}">
 </head>
 <body>
-<script src="/js/startPageScript.js"></script>
+<script src="/js/registerPageScript.js"></script>
 <div>
     <!-- Main div code -->
     <div id="main">
@@ -16,20 +16,23 @@
         </div>
         <!-- Form code -->
         <div>
-            <form th:action="@{/register}" method="post" th:object="${user}">
+            <form action="#" th:action="@{/register}" method="post" th:object="${user}">
             <table th:class="registerTable">
                 <tr>
                     <td class="textBoxNameCategory">Enter Username:</td>
-                    <td><input type="text" placeholder="Enter Username here" id="textBox1" class="textBox" th:field="*{username}" /></td>
+                    <td><input type="text" required placeholder="Enter Username here" id="textBox1" class="textBox" th:field="*{username}" /></td>
+                    <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">UserName Error</td>
                 </tr>
                 <tr>
                     <td class="textBoxNameCategory">Enter Password:</td>
-                    <td><input type="password" placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}"/></td>
+                    <td><input type="password" required placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}"/></td>
+                    <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
                 </tr>
-                <tr>
+                <!-- TODO confirm password -->
+<!--                <tr>
                     <td class="textBoxNameCategory">Enter Confirm Password:</td>
-                    <td><input type="password" placeholder="Confirm Password here" id="textBox3" class="textBox" /></td>
-                </tr>
+                    <td><input type="password" required placeholder="Confirm Password here" id="textBox3" class="textBox" /></td>
+                </tr>-->
                 <tr>
                     <!-- Empty for buttons location-->
                     <td></td>

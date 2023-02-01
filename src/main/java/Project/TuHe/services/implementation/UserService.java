@@ -15,9 +15,9 @@ public class UserService {
     private UserRepository userRepository;
 
     public void registration(UserEntity user) throws UserAlreadyExistException {
-//        if(userRepository.findByUsername(user.getUsername()) != null){
-//            throw new UserAlreadyExistException("User with such username already exist");
-//        }
+        if(userRepository.findByUsername(user.getUsername()) != null){
+            throw new UserAlreadyExistException("User with such username already exist");
+        }
         userRepository.save(user);
     }
 
@@ -33,4 +33,5 @@ public class UserService {
         userRepository.deleteById(id);
         return id;
     }
+
 }

@@ -2,7 +2,7 @@ function registration()
 {
     var userName= document.getElementById("textBox1").value;
     var password= document.getElementById("textBox2").value;
-    var confirmPassword= document.getElementById("textBox3").value;
+    // var confirmPassword= document.getElementById("textBox3").value;
 
     if(userName=='')
     {
@@ -16,10 +16,10 @@ function registration()
     {
         alert('Confirm password');
     }
-    else if(password != confirmPassword)
+/*    else if(password != confirmPassword)
     {
         alert ('Password not matched');
-    }
+    }*/
     else if(document.getElementById("textBox3").value.length < 5)
     {
         alert ('Password minimum length is 5');
@@ -37,5 +37,5 @@ function clearFunction()
 {
     document.getElementById("textBox1").value="";
     document.getElementById("textBox2").value="";
-    document.getElementById("textBox3").value="";
+    // document.getElementById("textBox3").value="";
 }

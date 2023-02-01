@@ -1,6 +1,10 @@
 package Project.TuHe.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,8 +17,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column (name = "username")
+    @NotEmpty(message = "UserName is required")
     private String username;
     @Column (name = "password")
+    @NotEmpty(message = "Password is required")
+    @Size(min = 5, max = 50)
     private String password;
 
     public UserEntity() {
