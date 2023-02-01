@@ -6,7 +6,6 @@ import Project.TuHe.exceptions.UserNotFoundException;
 import Project.TuHe.models.UserModel;
 import Project.TuHe.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,11 +14,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserEntity registration(UserEntity user) throws UserAlreadyExistException {
-        if(userRepository.findByUsername(user.getUsername()) != null){
-            throw new UserAlreadyExistException("User with such username already exist");
-        }
-        return userRepository.save(user);
+    public void registration(UserEntity user) throws UserAlreadyExistException {
+//        if(userRepository.findByUsername(user.getUsername()) != null){
+//            throw new UserAlreadyExistException("User with such username already exist");
+//        }
+        userRepository.save(user);
     }
 
     public UserModel getSpecificUser(Long id) throws UserNotFoundException {

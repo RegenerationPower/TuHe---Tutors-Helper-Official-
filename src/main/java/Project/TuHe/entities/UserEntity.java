@@ -1,14 +1,20 @@
 package Project.TuHe.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "user")
+@Setter
+@Getter
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column (name = "username")
     private String username;
+    @Column (name = "password")
     private String password;
 
     public UserEntity() {

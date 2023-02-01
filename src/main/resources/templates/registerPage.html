@@ -11,19 +11,20 @@
 <div>
     <!-- Main div code -->
     <div id="main">
-        <div class="h-tag">
+        <div>
             <h2>Create Your Account</h2>
         </div>
         <!-- Form code -->
-        <div class="login">
-            <table class="registerTable">
+        <div>
+            <form th:action="@{/register}" method="post" th:object="${user}">
+            <table th:class="registerTable">
                 <tr>
                     <td class="textBoxNameCategory">Enter Username:</td>
-                    <td><input type="text" placeholder="Enter Username here" id="textBox1" class="textBox" /></td>
+                    <td><input type="text" placeholder="Enter Username here" id="textBox1" class="textBox" th:field="*{username}" /></td>
                 </tr>
                 <tr>
                     <td class="textBoxNameCategory">Enter Password:</td>
-                    <td><input type="password" placeholder="Enter Password here" id="textBox2" class="textBox" /></td>
+                    <td><input type="password" placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}"/></td>
                 </tr>
                 <tr>
                     <td class="textBoxNameCategory">Enter Confirm Password:</td>
@@ -34,9 +35,10 @@
                     <td></td>
                     <td>
                         <input type="reset" value="Clear Form" onclick="clearFunction()" class="btn" />
-                        <input type="submit" value="Create Account" onclick="registration()"  class="btn" /></td>
+                        <input type="submit" value="Create Account" onclick="registration()" class="btn" /></td>
                 </tr>
             </table>
+            </form>
         </div>
         <!-- create account box ending -->
     </div>
