@@ -21,13 +21,14 @@
                 <tr>
                     <td class="textBoxNameCategory">Enter Username:</td>
                     <td><input type="text" required placeholder="Enter Username here" id="textBox1" class="textBox" th:field="*{username}" /></td>
-                    <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">UserName Error</td>
+                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p></td></tr>
                 </tr>
                 <tr>
                     <td class="textBoxNameCategory">Enter Password:</td>
                     <td><input type="password" required placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}"/></td>
-                    <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
                 </tr>
+                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p></td></tr>
+
                 <!-- TODO confirm password -->
 <!--                <tr>
                     <td class="textBoxNameCategory">Enter Confirm Password:</td>
@@ -38,7 +39,7 @@
                     <td></td>
                     <td>
                         <input type="reset" value="Clear Form" onclick="clearFunction()" class="btn" />
-                        <input type="submit" value="Create Account" onclick="registration()" class="btn" /></td>
+                        <input type="submit" value="Register" class="btn" /></td>
                 </tr>
             </table>
             </form>

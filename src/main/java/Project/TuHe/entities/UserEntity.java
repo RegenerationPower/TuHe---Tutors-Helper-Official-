@@ -16,15 +16,20 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column (name = "username")
+    @Column (name = "username", unique = true)
     @NotEmpty(message = "UserName is required")
+    @Size(min = 5, max = 50, message = "Username should be longer than 5, but shorter than 50")
     private String username;
     @Column (name = "password")
     @NotEmpty(message = "Password is required")
-    @Size(min = 5, max = 50)
+    @Size(min = 5, max = 50, message = "Password should be longer than 5, but shorter than 50")
     private String password;
 
     public UserEntity() {
+    }
+
+    public Boolean userWithSuchUsernameExist(String username) {
+        return false;
     }
 
     public Long getId() {
