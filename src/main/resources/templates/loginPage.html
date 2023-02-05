@@ -12,11 +12,11 @@
   <!-- Main div code -->
   <div id="main">
     <div>
-      <h2>Create Your Account</h2>
+      <h2>Sign in</h2>
     </div>
     <!-- Form code -->
     <div>
-      <form action="#" th:action="@{/login}" method="post" th:object="${user}">
+      <form action="#" th:action="@{/main}" method="get" th:object="${user}">
         <table th:class="registerTable">
           <tr>
             <td class="textBoxNameCategory">Enter Username:</td>

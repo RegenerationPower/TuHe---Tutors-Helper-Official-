@@ -16,11 +16,15 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column (name = "username", unique = true)
+    @Column(nullable = false, unique = true, length = 50)
+    @NotEmpty(message = "Email is required")
+    @Size(min = 5, max = 50, message = "Email should be longer than 5, but shorter than 50")
+    private String email;
+    @Column (unique = true, nullable = false)
     @NotEmpty(message = "UserName is required")
     @Size(min = 5, max = 50, message = "Username should be longer than 5, but shorter than 50")
     private String username;
-    @Column (name = "password")
+    @Column (nullable = false)
     @NotEmpty(message = "Password is required")
     @Size(min = 5, max = 50, message = "Password should be longer than 5, but shorter than 50")
     private String password;
@@ -54,5 +58,13 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

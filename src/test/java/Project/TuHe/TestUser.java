@@ -26,8 +26,9 @@ class TestUser {
 	@Test
 	void testRegisterUser() {
 		UserEntity user = new UserEntity();
-		user.setUsername("Ravi35");
-		user.setPassword("ravi2020");
+		user.setUsername("TestName");
+		user.setPassword("12345");
+		user.setEmail("test1@gmail.com");
 		UserEntity savedUser = userRepository.save(user);
 		UserEntity existUser = entityManager.find(UserEntity.class, savedUser.getId());
 		assertThat(user.getUsername()).isEqualTo(existUser.getUsername());

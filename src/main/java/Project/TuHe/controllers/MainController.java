@@ -10,6 +10,6 @@ public class MainController {
     @GetMapping("/main")
     public String Main(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model){
         model.addAttribute("name", name);
-        return "main";
+        return "mainPage";
     }
 }

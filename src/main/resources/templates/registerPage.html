@@ -12,11 +12,11 @@
     <!-- Main div code -->
     <div id="main">
         <div>
-            <h2>Create Your Account</h2>
+            <h2>Sign up</h2>
         </div>
         <!-- Form code -->
         <div>
-            <form action="#" th:action="@{/register}" method="post" th:object="${user}">
+            <form action="#" th:action="@{/login}" method="post" th:object="${user}">
             <table th:class="registerTable">
                 <tr>
                     <td class="textBoxNameCategory">Enter Username:</td>
@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <td class="textBoxNameCategory">Enter Password:</td>
-                    <td><input type="password" required placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}"/></td>
+                    <td><input type="password" required placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}" /></td>
                 </tr>
                 <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p></td></tr>
 
@@ -35,11 +35,16 @@
                     <td><input type="password" required placeholder="Confirm Password here" id="textBox3" class="textBox" /></td>
                 </tr>-->
                 <tr>
+                    <td class="textBoxNameCategory">Enter Password:</td>
+                    <td><input type="email" required placeholder="Enter Email here" id="textBox3" class="textBox" th:field="*{email}" /></td>
+                </tr>
+                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p></td></tr>
+                <tr>
                     <!-- Empty for buttons location-->
                     <td></td>
                     <td>
                         <input type="reset" value="Clear Form" onclick="clearFunction()" class="btn" />
-                        <input type="submit" value="Register" class="btn" /></td>
+                        <input type="submit" value="Register" onclick="registration()" class="btn" /></td>
                 </tr>
             </table>
             </form>

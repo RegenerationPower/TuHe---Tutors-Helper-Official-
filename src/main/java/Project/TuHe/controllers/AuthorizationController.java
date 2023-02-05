@@ -2,12 +2,11 @@ package Project.TuHe.controllers;
 
 import Project.TuHe.entities.UserEntity;
 import Project.TuHe.exceptions.UserAlreadyExistException;
-import Project.TuHe.services.implementation.UserService;
+import Project.TuHe.services.UserService;
 import Project.TuHe.validations.UserValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -16,40 +15,38 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorizationController {
     @Autowired
     private UserService userService;
+    @Autowired
     private UserValidation userValidation;
-    @RequestMapping(value = "/start", method = RequestMethod.GET)
-    public String home(Model model, UserEntity user) {
-        model.addAttribute("user", user);
+
+    @RequestMapping(value = "/register")
+    public String register(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) throws UserAlreadyExistException {
+//        if (bindingResult.hasErrors()) {
+//            return "registerPage";
+//        }
+        try {
+            userService.registration(user);
+        }
+        catch (Exception e) {
+//            throw new UserAlreadyExistException("User with such username already exist");
+            System.out.println("So Bad");
+        }
         return "registerPage";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) throws UserAlreadyExistException {
-        if (bindingResult.hasErrors()) {
-            return "registerPage";
-        }
+
+    @RequestMapping(value = "/login")
+    public String login(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) throws UserAlreadyExistException {
+/*        if (bindingResult.hasErrors()) {
+            return "loginPage";
+        }*/
         try {
             userService.registration(user);
         }
         catch (Exception e) {
-            throw new UserAlreadyExistException("User with such username already exist");
+//            throw new UserAlreadyExistException("User with such username already exist");
+            System.out.println("Bad");
         }
         return "loginPage";
-    }
-
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) throws UserAlreadyExistException {
-        if (bindingResult.hasErrors()) {
-            return "loginPage";
-        }
-        try {
-            userService.registration(user);
-        }
-        catch (Exception e) {
-            throw new UserAlreadyExistException("User with such username already exist");
-        }
-        return "main";
     }
 
     @InitBinder
