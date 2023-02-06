@@ -1,8 +1,6 @@
 package Project.TuHe.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -18,15 +16,15 @@ public class UserEntity {
     private Long id;
     @Column(nullable = false, unique = true, length = 50)
     @NotEmpty(message = "Email is required")
-    @Size(min = 5, max = 50, message = "Email should be longer than 5, but shorter than 50")
+    //@Size(min = 5, max = 50, message = "Email should be longer than 5, but shorter than 50")
     private String email;
     @Column (unique = true, nullable = false)
     @NotEmpty(message = "UserName is required")
-    @Size(min = 5, max = 50, message = "Username should be longer than 5, but shorter than 50")
+    //@Size(min = 5, max = 50, message = "Username should be longer than 5, but shorter than 50")
     private String username;
-    @Column (nullable = false)
+    @Column (nullable = false, length = 64)
     @NotEmpty(message = "Password is required")
-    @Size(min = 5, max = 50, message = "Password should be longer than 5, but shorter than 50")
+    //@Size(min = 5, max = 50, message = "Password should be longer than 5, but shorter than 50")
     private String password;
 
     public UserEntity() {

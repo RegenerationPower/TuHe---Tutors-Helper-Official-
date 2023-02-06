@@ -16,18 +16,18 @@
     </div>
     <!-- Form code -->
     <div>
-      <form action="#" th:action="@{/main}" method="get" th:object="${user}">
+      <form action="#" th:action="@{/}" method="get" th:object="${user}">
         <table th:class="registerTable">
           <tr>
             <td class="textBoxNameCategory">Enter Username:</td>
             <td><input type="text" required placeholder="Enter Username here" id="textBox1" class="textBox" th:field="*{username}" /></td>
-          <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p></td></tr>
+<!--          <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p></td></tr>-->
           </tr>
           <tr>
             <td class="textBoxNameCategory">Enter Password:</td>
             <td><input type="password" required placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}"/></td>
           </tr>
-          <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p></td></tr>
+<!--          <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p></td></tr>-->
           <tr>
             <!-- Empty for buttons location-->
             <td></td>

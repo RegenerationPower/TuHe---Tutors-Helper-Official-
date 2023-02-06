@@ -1,9 +1,6 @@
 package Project.TuHe.services.implementation;
 
 import Project.TuHe.entities.UserEntity;
-import Project.TuHe.exceptions.UserAlreadyExistException;
-import Project.TuHe.exceptions.UserNotFoundException;
-import Project.TuHe.models.UserModel;
 import Project.TuHe.repositories.UserRepository;
 import Project.TuHe.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
