@@ -42,20 +42,9 @@ public class AuthorizationController {
     }
 
 
-    @RequestMapping(value = "/signIn")
-    public String login(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) throws UserAlreadyExistException {
-/*        if (bindingResult.hasErrors()) {
-            return "loginPage";
-        }*/
-        try {
-//            userService.registration(user);
-            userRepository.save(user);
-        }
-        catch (Exception e) {
-//            throw new UserAlreadyExistException("User with such username already exist");
-            System.out.println("Bad");
-        }
-        return "loginPage";
+    @RequestMapping(value = "/login")
+    public String login(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) {
+        return "login";
     }
 
     @InitBinder

@@ -18,11 +18,11 @@ public class UserEntity {
     @NotEmpty(message = "Email is required")
     //@Size(min = 5, max = 50, message = "Email should be longer than 5, but shorter than 50")
     private String email;
-    @Column (unique = true, nullable = false)
+    @Column (unique = true, nullable = false, length = 50)
     @NotEmpty(message = "UserName is required")
     //@Size(min = 5, max = 50, message = "Username should be longer than 5, but shorter than 50")
     private String username;
-    @Column (nullable = false, length = 64)
+    @Column (nullable = false, length = 100)
     @NotEmpty(message = "Password is required")
     //@Size(min = 5, max = 50, message = "Password should be longer than 5, but shorter than 50")
     private String password;

@@ -3,11 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Tutors Helper - starter page</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/registerPageStyle.css}">
+    <link rel="stylesheet" th:href="@{css/style.css}">
+    <link rel="stylesheet" th:href="@{css/registerPageStyle.css}">
+    <script type="text/javascript" th:src="@{js/registerPageScript.js}"></script>
 </head>
 <body>
-<script src="/js/registerPageScript.js"></script>
 <div>
     <!-- Main div code -->
     <div id="main">
@@ -16,7 +16,7 @@
         </div>
         <!-- Form code -->
         <div>
-            <form action="#" th:action="@{/signIn}" method="post" th:object="${user}">
+            <form action="#" th:action="@{/login}" method="post" th:object="${user}">
             <table th:class="registerTable">
                 <tr>
                     <td class="textBoxNameCategory">Enter Username:</td>
