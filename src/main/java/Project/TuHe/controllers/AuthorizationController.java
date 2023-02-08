@@ -21,22 +21,21 @@ public class AuthorizationController {
     private UserService userService;
     @Autowired
     private UserValidation userValidation;
-    @Autowired
-    private UserRepository userRepository;
 
     @RequestMapping(value = "/signUp")
     public String register(@ModelAttribute("user") UserEntity user, Model model, BindingResult bindingResult) throws UserAlreadyExistException {
-//        if (bindingResult.hasErrors()) {
-//            return "registerPage";
-//       }
+        if (bindingResult.hasErrors()) {
+            return "registerPage";
+       }
         model.addAttribute("user", new UserEntity());
+        // set to omit error
         user.setPassword("12345");
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         try {
-//            userService.registration(user);
-            userRepository.save(user);
+            userService.registration(user);
         }
         catch (Exception e) {
 //            throw new UserAlreadyExistException("User with such username already exist");

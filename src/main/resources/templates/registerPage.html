@@ -3,40 +3,42 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Tutors Helper - starter page</title>
+    <link rel="stylesheet" href=" https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" th:href="@{css/style.css}">
-    <link rel="stylesheet" th:href="@{css/registerPageStyle.css}">
+    <link rel="stylesheet" th:href="@{css/authorizationStyle.css}">
     <script type="text/javascript" th:src="@{js/registerPageScript.js}"></script>
 </head>
-<body>
+<body class="backAnimation">
 <div>
     <!-- Main div code -->
     <div id="main">
         <div>
-            <h2>Sign up</h2>
+            <h2 class="display-6 text-center">Sign up</h2>
         </div>
         <!-- Form code -->
         <div>
             <form action="#" th:action="@{/signUp}" method="post" th:object="${user}">
             <table th:class="registerTable">
                 <tr>
-                    <td class="textBoxNameCategory">Enter Username:</td>
-                    <td><input type="text" required placeholder="Enter Username here" id="textBox1" class="textBox" th:field="*{username}" /></td>
+                    <td class="form-control-plaintext">Enter Username:</td>
+                    <td><input type="text" required placeholder="Enter Username here" id="inputUsername" class="form-control form-control-sm" th:field="*{username}" /></td>
 <!--                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p></td></tr>-->
                 </tr>
                 <tr>
-                    <td class="textBoxNameCategory">Enter Password:</td>
-                    <td><input type="password" required placeholder="Enter Password here" id="textBox2" class="textBox" th:field="*{password}" /></td>
+                    <td class="form-control-plaintext">Enter Password:</td>
+                    <td><input type="password" required placeholder="Enter Password here" id="inputPassword" class="form-control form-control-sm" th:field="*{password}" /></td>
                 </tr>
 <!--                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p></td></tr>-->
 
                 <!-- TODO confirm password -->
-<!--                <tr>
-                    <td class="textBoxNameCategory">Enter Confirm Password:</td>
-                    <td><input type="password" required placeholder="Confirm Password here" id="textBox3" class="textBox" /></td>
-                </tr>-->
                 <tr>
-                    <td class="textBoxNameCategory">Enter Email:</td>
-                    <td><input type="email" required placeholder="Enter Email here" id="textBox3" class="textBox" th:field="*{email}" /></td>
+                    <td class="form-control-plaintext">Confirm Password:</td>
+                    <td><input type="password" required placeholder="Confirm Password here" id="confirmPassword" class="form-control form-control-sm" /></td>
+                </tr>
+                <tr>
+                    <td class="form-control-plaintext">Enter Email:</td>
+                    <td><input type="email" required placeholder="Enter Email here" id="inputEmail" class="form-control form-control-sm" th:field="*{email}" /></td>
                 </tr>
 <!--                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p></td></tr>-->
                 <tr>
@@ -47,12 +49,21 @@
                         <input type="submit" value="Register" onclick="registration()" class="btn" /></td>
                 </tr>
             </table>
-                <a th:href="login">Already have an account?</a>
+                <div class="linkDiv fst-italic"><a th:href="login">Already have an account?</a></div>
             </form>
         </div>
         <!-- create account box ending -->
     </div>
     <!-- Main div ending. -->
+</div>
+<div class="footer-basic">
+    <footer>
+        <div class="social">
+            <a href="https://t.me/vzzzt02"><i class="fa fa-telegram"></i></a>
+            <a href="https://github.com/RegenerationPower"><i class="fa fa-github"></i></a>
+        </div>
+        <p class="copyright">Tutors Helper © 2023</p>
+    </footer>
 </div>
 </body>
 </html>

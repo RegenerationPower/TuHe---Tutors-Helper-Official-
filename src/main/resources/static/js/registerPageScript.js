@@ -1,8 +1,9 @@
 function registration()
 {
-    var userName= document.getElementById("textBox1").value;
-    var password= document.getElementById("textBox2").value;
-    var email= document.getElementById("textBox3").value;
+    var userName= document.getElementById("inputUsername").value;
+    var password= document.getElementById("inputPassword").value;
+    var confirmPassword= document.getElementById("confirmPassword").value;
+    var email= document.getElementById("inputEmail").value;
     // var confirmPassword= document.getElementById("textBox3").value;
 
     if(userName=='')
@@ -17,18 +18,12 @@ function registration()
     {
         alert('Please enter email');
     }
-/*    else if(confirmPassword=='')
-    {
-        alert('Confirm password');
-    }*/
-/*    else if(password != confirmPassword)
-    {
-        alert ('Password not matched');
-    }*/
 }
+
 function clearFunction()
 {
-    document.getElementById("textBox1").value="";
-    document.getElementById("textBox2").value="";
-    document.getElementById("textBox3").value="";
+    document.getElementById("inputUsername").value="";
+    document.getElementById("inputPassword").value="";
+    document.getElementById("confirmPassword").value="";
+    document.getElementById("inputEmail").value="";
 }
