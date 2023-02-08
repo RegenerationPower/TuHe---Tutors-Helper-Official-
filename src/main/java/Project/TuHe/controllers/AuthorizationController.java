@@ -2,6 +2,7 @@ package Project.TuHe.controllers;
 
 import Project.TuHe.entities.UserEntity;
 import Project.TuHe.exceptions.UserAlreadyExistException;
+import Project.TuHe.models.UserModel;
 import Project.TuHe.repositories.UserRepository;
 import Project.TuHe.services.UserService;
 import Project.TuHe.validations.UserValidation;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +25,12 @@ public class AuthorizationController {
     private UserRepository userRepository;
 
     @RequestMapping(value = "/signUp")
-    public String register(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) throws UserAlreadyExistException {
+    public String register(@ModelAttribute("user") UserEntity user, Model model, BindingResult bindingResult) throws UserAlreadyExistException {
 //        if (bindingResult.hasErrors()) {
 //            return "registerPage";
-//        }
+//       }
+        model.addAttribute("user", new UserEntity());
+        user.setPassword("12345");
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);

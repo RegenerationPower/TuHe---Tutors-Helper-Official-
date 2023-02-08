@@ -16,7 +16,7 @@
         </div>
         <!-- Form code -->
         <div>
-            <form action="#" th:action="@{/login}" method="post" th:object="${user}">
+            <form action="#" th:action="@{/signUp}" method="post" th:object="${user}">
             <table th:class="registerTable">
                 <tr>
                     <td class="textBoxNameCategory">Enter Username:</td>
@@ -35,7 +35,7 @@
                     <td><input type="password" required placeholder="Confirm Password here" id="textBox3" class="textBox" /></td>
                 </tr>-->
                 <tr>
-                    <td class="textBoxNameCategory">Enter Password:</td>
+                    <td class="textBoxNameCategory">Enter Email:</td>
                     <td><input type="email" required placeholder="Enter Email here" id="textBox3" class="textBox" th:field="*{email}" /></td>
                 </tr>
 <!--                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p></td></tr>-->
@@ -47,6 +47,7 @@
                         <input type="submit" value="Register" onclick="registration()" class="btn" /></td>
                 </tr>
             </table>
+                <a th:href="login">Already have an account?</a>
             </form>
         </div>
         <!-- create account box ending -->
