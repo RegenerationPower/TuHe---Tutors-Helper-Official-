@@ -1,0 +1,89 @@
+html {
+    overflow-y: scroll;
+}
+
+li {
+    list-style: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.calendar-container {
+    display: grid;
+    grid-template-columns: 50px auto;
+    grid-template-rows: auto;
+    gap: 1px 1px;
+    grid-template-areas:
+            ". header"
+            "time-container events";
+}
+
+.days-of-the-week, .number-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.days-of-the-week {
+    background: yellow;
+}
+
+.number-days {
+    min-height: 1em;
+}
+
+.header {
+    background: gray;
+    grid-area: header;
+}
+
+.time-container {
+    background: lightcoral;
+    grid-area: time-container;
+    justify-content: left;
+}
+
+.time-of-the-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-of-the-day li {
+    min-height: 60px;
+}
+
+.time-of-the-day li:after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    width: 100%;
+    height: 1px;
+    background: lightcoral;
+    z-index: 1;
+}
+
+.event-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(96, 1fr);
+    grid-area: events;
+    position: relative;
+}
+
+.slot {
+    position: absolute;
+    background: blue;
+    border-radius: 5px;
+    z-index: 2;
+    color: white;
+    font-size: 15px;
+}
+
+.slot-1 {
+    height: 90px;
+    grid-row: 7;
+    grid-column: 2;
+}

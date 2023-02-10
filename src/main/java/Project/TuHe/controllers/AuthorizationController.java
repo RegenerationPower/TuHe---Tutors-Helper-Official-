@@ -2,8 +2,6 @@ package Project.TuHe.controllers;
 
 import Project.TuHe.entities.UserEntity;
 import Project.TuHe.exceptions.UserAlreadyExistException;
-import Project.TuHe.models.UserModel;
-import Project.TuHe.repositories.UserRepository;
 import Project.TuHe.services.UserService;
 import Project.TuHe.validations.UserValidation;
 import jakarta.validation.Valid;
@@ -47,7 +45,7 @@ public class AuthorizationController {
 
     @RequestMapping(value = "/login")
     public String login(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) {
-        return "login";
+        return "loginPage";
     }
 
     @InitBinder

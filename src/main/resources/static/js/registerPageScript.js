@@ -4,7 +4,6 @@ function registration()
     var password= document.getElementById("inputPassword").value;
     var confirmPassword= document.getElementById("confirmPassword").value;
     var email= document.getElementById("inputEmail").value;
-    // var confirmPassword= document.getElementById("textBox3").value;
 
     if(userName=='')
     {
