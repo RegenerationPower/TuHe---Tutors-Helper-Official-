@@ -1,5 +1,6 @@
 html {
     overflow-y: scroll;
+    padding-bottom: 125px;
 }
 
 li {
@@ -27,7 +28,7 @@ ul {
 }
 
 .days-of-the-week {
-    background: yellow;
+    background: white;
 }
 
 .number-days {
@@ -35,12 +36,12 @@ ul {
 }
 
 .header {
-    background: gray;
+    background: grey;
     grid-area: header;
 }
 
 .time-container {
-    background: lightcoral;
+    background: grey;
     grid-area: time-container;
     justify-content: left;
 }
@@ -52,17 +53,15 @@ ul {
 }
 
 .time-of-the-day li {
-    min-height: 60px;
+    min-height: 120px;
 }
 
 .time-of-the-day li:after {
     content: "";
     position: absolute;
-    left: 10px;
-    width: 100%;
+    width: 97.8%;
     height: 1px;
-    background: lightcoral;
-    z-index: 1;
+    background: grey;
 }
 
 .event-container {
@@ -77,7 +76,6 @@ ul {
     position: absolute;
     background: blue;
     border-radius: 5px;
-    z-index: 2;
     color: white;
     font-size: 15px;
 }
