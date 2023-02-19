@@ -21,7 +21,7 @@ public class AuthorizationController {
     private UserValidation userValidation;
 
     @RequestMapping(value = "/signUp")
-    public String register(@ModelAttribute("user") UserEntity user, Model model, BindingResult bindingResult) throws UserAlreadyExistException {
+    public String register(UserEntity user, Model model, BindingResult bindingResult) throws UserAlreadyExistException {
         if (bindingResult.hasErrors()) {
             return "registerPage";
        }
@@ -44,7 +44,7 @@ public class AuthorizationController {
 
 
     @RequestMapping(value = "/login")
-    public String login(@Valid @ModelAttribute("user") UserEntity user, BindingResult bindingResult) {
+    public String login(@ModelAttribute("user") UserEntity user, BindingResult bindingResult) {
         return "loginPage";
     }
 

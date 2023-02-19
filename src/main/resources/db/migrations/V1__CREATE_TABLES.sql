@@ -11,4 +11,18 @@ CREATE TABLE user (
     password varchar(100) not null,
     username varchar(50) not null unique,
     PRIMARY KEY (id)
-) engine=MyISAM
+) engine=MyISAM;
+
+CREATE TABLE student (
+                      id BIGINT NOT NULL AUTO_INCREMENT,
+                      studentName varchar(50) not null,
+                      PRIMARY KEY (id)
+) engine=MyISAM;
+
+CREATE TABLE event (
+                      id BIGINT NOT NULL AUTO_INCREMENT,
+                      title varchar(50) not null,
+                      start_time varchar(50) not null,
+                      end_time varchar(50) not null,
+                      PRIMARY KEY (id)
+) engine=MyISAM;
