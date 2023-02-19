@@ -1,160 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Rowdies&family=Titillium+Web&display=swap');
-
-.strike {
-    text-decoration: line-through;
-}
-
-td{
-    border: 1px solid black;
-    padding: 5px;
-}
-
-.todo-input{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 1rem;
-}
-
-.todoTable-block{
-    margin-top: 1rem;
-}
-
-.pagination-pages{
-    text-align: right;
-}
-
-.pagination-pages > * {
-    margin-right: 0.5rem;
-    cursor: pointer;
-}
-
-.material-icons{
-    cursor: pointer;
-}
-
-::-ms-input-placeholder{
-    color: #ed6a5e;
-}
-
-::-webkit-input-placeholder{
-    color: #ed6a5e;
-}
-
-::placeholder{
-    color: #ed6a5e;
-}
-
-input {
-    color:#a11e12;
-}
-
-h3 {
-    color:#a11e12;
-    font-family: 'Rowdies', cursive;
-}
-
-
-body{
-
-    font-family: 'Titillium Web', sans-serif;
-}
-
-.todo-block{
-    border: 1px solid #ff8e72;
-    padding: 1rem;
-    border-radius: 20px;
-    color: #a11e12;
-}
-
-@media screen and (max-width: 767px) {
-    /* for mobile or small screen device */
-    #todoTable, .todo-calendar{
-        margin-top: 1rem;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    /* for tablets or laptops or desktops */
-    .todo-grid-parent{
-        display: grid;
-        grid-template-columns: 2fr 3fr;
-        column-gap: 1rem;
-    }
-
-    #calendar{
-        position: sticky;
-        top: 0;
-    }
-}
-
-.todo-overlay{
-    width: 100vw;
-    height: 100vh;
-    background-color: #ddd;
+#eventModal {
+    display: none;
     position: fixed;
-    top: 0;
+    z-index: 1;
+    padding-top: 100px;
     left: 0;
-    opacity: 0.9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: translateX(-100vw);
-    transition: transform 250ms;
-    z-index: 2;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
 }
 
-.todo-modal{
-    min-width: 50vw;
-    background-color: #ffd6cc;
+#eventModal .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 80%;
+    border-radius: 10px;
+    position: relative;
 }
 
-.todo-modal-close-btn{
-    background-color: red;
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    color: white;
+#eventModal .modal-content h2 {
+    margin-top: 0;
+}
+
+#eventModal .modal-content label {
+    display: inline-block;
+    width: 100px;
     font-weight: bold;
 }
 
-.slidedIntoView {
-    transform: translateX(0);
-    transition: transform 650ms;
+#eventModal .modal-content input[type=text] {
+    width: 200px;
+    margin-bottom: 10px;
 }
 
-#todoTable tr:nth-child(even) {
-    background-color: #ffd6cc;
+#eventModal .modal-content input[type=submit] {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-button{
-    background-color: #ffd6cc;
-    color: #a11e12;
-    border: 1px outset #ed6a5e;
-}
-
-button:active{
-    border: 1px inset #ed6a5e;
-}
-
-button:hover{
-    background-color: #ffad99;
-}
-
-.chevron{
-    transform: translateY(0.4rem);
-}
-
-.itemsPerPage{
-    text-align: right;
-    margin-bottom: 0.5rem;
-}
-
-a {
-    text-decoration: none;
+#eventModal .modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
 }

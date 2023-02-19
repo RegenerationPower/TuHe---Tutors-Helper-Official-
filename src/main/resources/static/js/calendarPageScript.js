@@ -1,554 +1,76 @@
-todoMain();
-
-function todoMain() {
-    const DEFAULT_OPTION = "Choose category";
-
-    let inputElem,
-        inputElem2,
-        dateInput,
-        timeInput,
-        addButton,
-        selectElem,
-        todoList = [],
-        calendar,
-        changeBtn,
-        todoTable,
-        draggingElement,
-        currentPage = 1,
-        itemsPerPage = Number.parseInt(localStorage.getItem("todo-itemsPerPage")) || 5,
-        totalPages = 0,
-        paginationCtnr,
-        todoModalCloseBtn;
-
-    getElements();
-    addListeners();
-    initCalendar();
-    load();
-    renderRows(todoList);
-    updateSelectOptions();
-
-    function getElements() {
-        inputElem = document.getElementsByTagName("input")[0];
-        inputElem2 = document.getElementsByTagName("input")[1];
-        dateInput = document.getElementById("dateInput");
-        timeInput = document.getElementById("timeInput");
-        addButton = document.getElementById("addBtn");
-        selectElem = document.getElementById("categoryFilter");
-        changeBtn = document.getElementById("changeBtn");
-        todoTable = document.getElementById("todoTable");
-        paginationCtnr = document.querySelector(".pagination-pages");
-        todoModalCloseBtn = document.getElementById("todo-modal-close-btn");
-    }
-
-    function addListeners() {
-        addButton.addEventListener("click", addEntry, false);
-        selectElem.addEventListener("change", multipleFilter, false);
-
-        todoModalCloseBtn.addEventListener("click", closeEditModalBox, false);
-
-        changeBtn.addEventListener("click", commitEdit, false);
-
-        todoTable.addEventListener("dragstart", onDragstart, false);
-        todoTable.addEventListener("drop", onDrop, false);
-        todoTable.addEventListener("dragover", onDragover, false);
-
-        paginationCtnr.addEventListener("click", onPaginationBtnsClick, false);
-    }
-
-    function addEntry(event) {
-
-        let inputValue = inputElem.value;
-        inputElem.value = "";
-
-        let inputValue2 = inputElem2.value;
-        inputElem2.value = "";
-
-        let dateValue = dateInput.value;
-        dateInput.value = "";
-
-        let timeValue = timeInput.value;
-        timeInput.value = "";
-
-        let obj = {
-            id: _uuid(),
-            todo: inputValue,
-            category: inputValue2,
-            date: dateValue,
-            startTime: timeValue,
-            done: false,
-        };
-
-        renderRow(obj);
-
-        todoList.push(obj);
-
-        save();
-
-        updateSelectOptions();
-
-        addEvent(obj);
-
-    }
-
-    function updateSelectOptions() {
-        let options = [];
-
-        todoList.forEach((obj) => {
-            options.push(obj.category);
-        });
-
-        let optionsSet = new Set(options);
-
-        // empty the select options
-        selectElem.innerHTML = "";
-
-        let newOptionElem = document.createElement('option');
-        newOptionElem.value = DEFAULT_OPTION;
-        newOptionElem.innerText = DEFAULT_OPTION;
-        selectElem.appendChild(newOptionElem);
-
-        for (let option of optionsSet) {
-            let newOptionElem = document.createElement('option');
-            newOptionElem.value = option;
-            newOptionElem.innerText = option;
-            selectElem.appendChild(newOptionElem);
-        }
-
-
-    }
-
-    function save() {
-        let stringified = JSON.stringify(todoList);
-        localStorage.setItem("todoList", stringified);
-    }
-
-    function load() {
-        let retrieved = localStorage.getItem("todoList");
-        todoList = JSON.parse(retrieved);
-        if (todoList == null)
-            todoList = [];
-
-    }
-
-    function renderRows(arr) {
-
-        renderPageNumbers(arr);
-        currentPage = currentPage > totalPages ? totalPages : currentPage;
-
-        arr.forEach(addEvent);
-
-        let slicedArr = arr.slice(itemsPerPage * (currentPage - 1), itemsPerPage * currentPage);
-        slicedArr.forEach(todoObj => {
-            renderRow(todoObj);
-        })
-    }
-
-    function renderRow({ todo: inputValue, category: inputValue2, id, date, startTime, done }) {
-
-        let trElem = document.createElement("tr");
-        todoTable.appendChild(trElem);
-        trElem.draggable = "true";
-        trElem.dataset.id = id;
-
-        let checkboxElem = document.createElement("input");
-        checkboxElem.type = "checkbox";
-        checkboxElem.addEventListener("click", checkboxClickCallback, false);
-        checkboxElem.dataset.id = id;
-        let tdElem1 = document.createElement("td");
-        tdElem1.appendChild(checkboxElem);
-        trElem.appendChild(tdElem1);
-
-        let dateElem = document.createElement("td");
-        dateElem.innerText = date; //formatDate(date);
-        trElem.appendChild(dateElem);
-
-        let timeElem = document.createElement("td");
-        timeElem.innerText = startTime;
-        trElem.appendChild(timeElem);
-
-        let tdElem2 = document.createElement("td");
-        tdElem2.innerText = inputValue;
-        trElem.appendChild(tdElem2);
-
-        let tdElem3 = document.createElement("td");
-        tdElem3.innerText = inputValue2;
-        tdElem3.className = "categoryCell";
-        trElem.appendChild(tdElem3);
-
-        let editSpan = document.createElement("span");
-        editSpan.innerText = "edit";
-        editSpan.className = "material-icons";
-        editSpan.addEventListener("click", toEditItem, false);
-        editSpan.dataset.id = id;
-        let editTd = document.createElement("td");
-        editTd.appendChild(editSpan);
-        trElem.appendChild(editTd);
-
-
-        let spanElem = document.createElement("span");
-        spanElem.innerText = "delete";
-        spanElem.className = "material-icons";
-        spanElem.addEventListener("click", deleteItem, false);
-        spanElem.dataset.id = id;
-        let tdElem4 = document.createElement("td");
-        tdElem4.appendChild(spanElem);
-        trElem.appendChild(tdElem4);
-
-
-        checkboxElem.type = "checkbox";
-        checkboxElem.checked = done;
-        if (done) {
-            trElem.classList.add("strike");
-        } else {
-            trElem.classList.remove("strike");
-        }
-
-        dateElem.dataset.type = "date";
-        timeElem.dataset.type = "startTime";
-        tdElem2.dataset.type = "todo";
-        tdElem3.dataset.type = "category";
-
-        dateElem.dataset.id = id;
-        timeElem.dataset.id = id;
-        tdElem2.dataset.id = id;
-        tdElem3.dataset.id = id;
-
-        function deleteItem() {
-            trElem.remove();
-            updateSelectOptions();
-
-            for (let i = 0; i < todoList.length; i++) {
-                if (todoList[i].id === this.dataset.id)
-                    todoList.splice(i, 1);
+$(document).ready(function() {
+    let calendar = $('#calendar').fullCalendar({
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        views: {
+            agendaDay: {
+                type: 'agenda',
+                duration: { days: 1 }
             }
-            save();
-
-            let calendarEvent = calendar.getEventById(this.dataset.id);
-            if(calendarEvent !== null)
-                calendarEvent.remove();
-        }
-
-        function checkboxClickCallback() {
-            trElem.classList.toggle("strike");
-            for (let i = 0; i < todoList.length; i++) {
-                if (todoList[i].id === this.dataset.id)
-                    todoList[i]["done"] = this.checked;
+        },
+        defaultView: 'month',
+        selectable: true,
+        editable: true,
+        eventOverlap: false,
+        events: [
+            {
+                title: 'Event 1',
+                start: '2023-02-19T12:00:00',
+                end: '2023-02-19T14:00:00'
+            },
+            {
+                title: 'Event 2',
+                start: '2023-02-20T10:00:00',
+                end: '2023-02-20T12:00:00'
             }
-            save();
-            multipleFilter();
-        }
-
-    }
-
-    function _uuid() {
-        var d = Date.now();
-        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-            d += performance.now(); //use high-precision timer if available
-        }
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-    }
-
-    function initCalendar() {
-        var calendarEl = document.getElementById('calendar');
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            selectable: true,
-            initialDate: new Date(), //'2020-07-07',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: [],
-            eventClick: function (info) {
-                toEditItem(info.event);
-            },
-            eventBackgroundColor: "#a11e12",
-            eventBorderColor: "#ed6a5e",
-            editable: true,
-            eventDrop: function (info) {
-                calendarEventDragged(info.event);
-            },
-            eventTimeFormat: {
-                hour: 'numeric',
-                minute: '2-digit',
-                omitZeroMinute: false,
-                hour12: false
-            }
-        });
-
-        calendar.render();
-    }
-
-    function addEvent({id, todo, date, startTime, done}) {
-        calendar.addEvent({
-            id: id,
-            title: todo,
-            start: startTime === "" ? date : `${date}T${startTime}`,
-            backgroundColor : (done ? "green" : "#a11e12"),
-        });
-    }
-
-    function clearTable() {
-        // Empty the table, keeping the first row
-        let trElems = todoTable.getElementsByTagName("tr");
-        for (let i = trElems.length - 1; i > 0; i--) {
-            trElems[i].remove();
-        }
-
-        calendar.getEvents().forEach(event => event.remove());
-    }
-
-    function multipleFilter() {
-        clearTable();
-
-        let selection = selectElem.value;
-
-        if (selection === DEFAULT_OPTION) {
-            renderRows(todoList);
-        } else {
-            let filteredCategoryArray = todoList.filter(obj => obj.category === selection);
-            renderRows(filteredCategoryArray);
-        }
-
-    }
-
-
-    function formatDate(date) {
-        let dateObj = new Date(date);
-        console.log(dateObj);
-        return dateObj.toLocaleString("en-GB", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-        });
-    }
-
-    function showEditModalBox(event) {
-        document.getElementById("todo-overlay").classList.add("slidedIntoView");
-    }
-
-    function closeEditModalBox(event) {
-        document.getElementById("todo-overlay").classList.remove("slidedIntoView");
-    }
-
-    function commitEdit(event) {
-        closeEditModalBox();
-
-        let id = event.target.dataset.id;
-        let todo = document.getElementById("todo-edit-todo").value;
-        let category = document.getElementById("todo-edit-category").value;
-        let date = document.getElementById("todo-edit-date").value;
-        let startTime = document.getElementById("todo-edit-start-startTime").value;
-
-        // remove from calendar
-        calendar.getEventById(id).remove();
-
-        for (let i = 0; i < todoList.length; i++) {
-            if (todoList[i].id === id) {
-                todoList[i] = {
-                    id: id,
-                    todo: todo,
-                    category: category,
-                    date: date,
-                    startTime: startTime,
-                    done: false,
+        ],
+        eventClick: function(calEvent, jsEvent, view) {
+            $('#eventId').val(calEvent.id);
+            $('#eventTitle').val(calEvent.title);
+            $('#eventStart').val(calEvent.start.format('YYYY-MM-DD HH:mm:ss'));
+            $('#eventEnd').val(calEvent.end.format('YYYY-MM-DD HH:mm:ss'));
+            $('#eventModal').show();
+        },
+        select: function(start, end, jsEvent, view) {
+            let title = prompt('Enter Event Title:');
+            if (title) {
+                let eventStart = start.format('YYYY-MM-DD HH:mm:ss');
+                let eventEnd = end.format('YYYY-MM-DD HH:mm:ss');
+                let eventData = {
+                    title: title,
+                    start: eventStart,
+                    end: eventEnd
                 };
-
-                addEvent(todoList[i]);
+                calendar.fullCalendar('renderEvent', eventData, true);
             }
+            calendar.fullCalendar('unselect');
         }
+    });
 
-        save();
+    $('.close').click(function() {
+        $('#eventModal').hide();
+    });
 
-        // Update the table
-        //let tdNodeList = todoTable.querySelectorAll("td");
-        //let tdNodeList = todoTable.querySelectorAll("td[data-id='" + id + "']");
-        let tdNodeList = todoTable.querySelectorAll(`td[data-id='${id}']`);
-        for (let i = 0; i < tdNodeList.length; i++) {
-            //if(tdNodeList[i].dataset.id == id){
-            let type = tdNodeList[i].dataset.type;
-            switch (type) {
-                case "date":
-                    tdNodeList[i].innerText = formatDate(date);
-                    break;
-                case "startTime":
-                    tdNodeList[i].innerText = startTime;
-                    break;
-                case "todo":
-                    tdNodeList[i].innerText = todo;
-                    break;
-                case "category":
-                    tdNodeList[i].innerText = category;
-                    break;
-            }
-            //}
-        }
-    }
-
-    function toEditItem(event) {
-        showEditModalBox();
-
-        let id;
-
-        if (event.target) // mouse event
-            id = event.target.dataset.id;
-        else // calendar event
-            id = event.id;
-
-        preFillEditForm(id);
-    }
-
-    function preFillEditForm(id) {
-        let result = todoList.find(todoObj => todoObj.id === id);
-        let { todo, category, date, startTime } = result;
-
-        document.getElementById("todo-edit-todo").value = todo;
-        document.getElementById("todo-edit-category").value = category;
-        document.getElementById("todo-edit-date").value = date;
-        document.getElementById("todo-edit-start-startTime").value = startTime;
-
-        changeBtn.dataset.id = id;
-    }
-
-    function onDragstart(event) {
-        draggingElement = event.target; //trElem
-    }
-
-    function onDrop(event) {
-
-        /* Handling visual drag and drop of the rows */
-
-        // prevent when target is table
-        if (event.target.matches("table"))
-            return;
-
-        let beforeTarget = event.target;
-
-        // to look through parent until it is tr
-        while (!beforeTarget.matches("tr"))
-            beforeTarget = beforeTarget.parentNode;
-
-        // to be implemented
-        //beforeTarget.style.paddingTop = "1rem";
-
-        // prevent when the tr is the first row
-        if (beforeTarget.matches(":first-child"))
-            return;
-
-        // visualise the drag and drop
-        todoTable.insertBefore(draggingElement, beforeTarget);
-
-
-        /* Handling the array */
-
-        let tempIndex;
-
-        // find the index of one to be taken out
-        todoList.forEach((todoObj, index) => {
-            if (todoObj.id === draggingElement.dataset.id)
-                tempIndex = index;
-        });
-
-        // pop the element
-        let [toInsertObj] = todoList.splice(tempIndex, 1);
-
-        // find the index of one to be inserted before
-
-        todoList.forEach((todoObj, index) => {
-            if (todoObj.id === beforeTarget.dataset.id)
-                tempIndex = index;
-        });
-
-        // insert the temp
-        todoList.splice(tempIndex, 0, toInsertObj);
-
-        // update storage
-        save();
-
-    }
-
-    function onDragover(event) {
+    $('#editForm').submit(function(event) {
         event.preventDefault();
-    }
-
-    function calendarEventDragged(event) {
-        let id = event.id;
-        let dateObj = new Date(event.start);
-        let year = dateObj.getFullYear();
-        let month = dateObj.getMonth() + 1;
-        let date = dateObj.getDate();
-        let hour = dateObj.getHours();
-        let minute = dateObj.getMinutes();
-
-        let paddedMonth = month.toString().padStart(2, "0");
-        let paddedDate = date.toString().padStart(2, "0");
-
-        let toStoreDate = `${year}-${paddedMonth}-${paddedDate}`;
-        console.log(toStoreDate);
-
-        todoList.forEach(todoObj => {
-            if (todoObj.id === id) {
-                todoObj.date = toStoreDate;
-                if (hour !== 0) {
-                    todoObj.startTime = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
-                } else {
-                    todoObj.startTime = null;
-                }
-            }
-        });
-
-        save();
-        multipleFilter();
-    }
-
-    function onPaginationBtnsClick(event){
-        switch(event.target.dataset.pagination){
-            case "pageNumber" :
-                currentPage = Number(event.target.innerText);
-                break;
-            case "previousPage" :
-                currentPage = currentPage === 1 ? currentPage : currentPage - 1;
-                break;
-            case "nextPage" :
-                currentPage = currentPage === totalPages ? currentPage : currentPage + 1;
-                break;
-            case "firstPage" :
-                currentPage = 1;
-                break;
-            case "lastPage" :
-                currentPage = totalPages;
-                break;
-            default:
-        }
-        multipleFilter();
-    }
-
-    function renderPageNumbers(arr){
-        let numberOfItems = arr.length;
-        totalPages = Math.ceil(numberOfItems / itemsPerPage);
-
-        let pageNumberDiv = document.querySelector(".pagination-pages");
-
-        pageNumberDiv.innerHTML = `<span class="material-icons chevron" data-pagination="firstPage">first_page</span>`;
-
-        if(currentPage !== 1)
-            pageNumberDiv.innerHTML += `<span class="material-icons chevron" data-pagination="previousPage">chevron_left</span>`;
-
-        if(totalPages > 0){
-            for(let i = 1; i <= totalPages; i++) {
-                pageNumberDiv.innerHTML += `<span data-pagination="pageNumber">${i}</span>`;
-            }
-        }
-
-        if(currentPage !== totalPages)
-            pageNumberDiv.innerHTML += `<span class="material-icons chevron" data-pagination="nextPage">chevron_right</span>`;
-
-        pageNumberDiv.innerHTML += `<span class="material-icons chevron" data-pagination="lastPage">last_page</span>`;
-    }
-
-}
+        let eventId = $('#eventId').val();
+        let eventTitle = $('#eventTitle').val();
+        let eventStart = $('#eventStart').val();
+        let eventEnd = $('#eventEnd').val();
+        let eventData = {
+            id: eventId,
+            title: eventTitle,
+            start: eventStart,
+            end: eventEnd
+        };
+        let updatedEvent = calendar.getEventById(eventData.id);
+        updatedEvent.setProp('title', eventData.title);
+        updatedEvent.setStart(eventData.start);
+        updatedEvent.setEnd(eventData.end);
+        calendar.updateEvent(updatedEvent);
+        $('#eventModal').hide();
+    });
+});
