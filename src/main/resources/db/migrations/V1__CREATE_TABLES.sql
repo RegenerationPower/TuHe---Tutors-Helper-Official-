@@ -22,7 +22,7 @@ CREATE TABLE student (
 CREATE TABLE event (
                       id BIGINT NOT NULL AUTO_INCREMENT,
                       title varchar(50) not null,
-                      start_time varchar(50) not null,
-                      end_time varchar(50) not null,
+                      start_time DATETIME not null,
+                      end_time DATETIME not null,
                       PRIMARY KEY (id)
 ) engine=MyISAM;

@@ -15,16 +15,22 @@ $(document).ready(function() {
         selectable: true,
         editable: true,
         eventOverlap: false,
+        // events: '/api/events/',
         events: [
             {
                 title: 'Event 1',
-                start: '2023-02-19T12:00:00',
-                end: '2023-02-19T14:00:00'
+                start: '2023-03-01T10:00:00',
+                end: '2023-03-01T12:00:00'
             },
             {
                 title: 'Event 2',
-                start: '2023-02-20T10:00:00',
-                end: '2023-02-20T12:00:00'
+                start: '2023-03-05T14:00:00',
+                end: '2023-03-05T16:00:00'
+            },
+            {
+                title: 'All Day Event',
+                start: '2023-03-08',
+                allDay: true
             }
         ],
         eventClick: function(calEvent, jsEvent, view) {
@@ -37,17 +43,31 @@ $(document).ready(function() {
         select: function(start, end, jsEvent, view) {
             let title = prompt('Enter Event Title:');
             if (title) {
-                let eventStart = start.format('YYYY-MM-DD HH:mm:ss');
-                let eventEnd = end.format('YYYY-MM-DD HH:mm:ss');
+                let eventStart = start.format('YYYY-MM-DDTHH:mm:ss');
+                let eventEnd = end.format('YYYY-MM-DDTHH:mm:ss');
                 let eventData = {
                     title: title,
-                    start: eventStart,
-                    end: eventEnd
+                    startTime: eventStart,
+                    endTime: eventEnd
                 };
-                calendar.fullCalendar('renderEvent', eventData, true);
+                $.ajax({
+                    url: '/api/events/',
+                    method: 'POST',
+                    data: eventData,
+                    success: function(response) {
+                        let calendarEventEntity = {
+                            id: response.id,
+                            title: response.title,
+                            startTime: moment(response.startTime),
+                            endTime: moment(response.endTime)
+                        };
+                        calendar.fullCalendar('renderEvent', calendarEventEntity, true);
+                    }
+                });
             }
             calendar.fullCalendar('unselect');
         }
+
     });
 
     $('.close').click(function() {

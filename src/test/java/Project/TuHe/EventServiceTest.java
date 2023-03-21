@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -19,8 +21,8 @@ public class EventServiceTest {
     public void testSaveEvent() {
         EventEntity event = new EventEntity();
         event.setTitle("Test Event");
-        event.setStartTime("2023-03-01 10:00:00");
-        event.setEndTime("2023-03-01 12:00:00");
+        event.setStartTime(LocalDateTime.parse("2023-03-01T10:00:00"));
+        event.setEndTime(LocalDateTime.parse("2023-03-01T12:00:00"));
 
         EventEntity savedEvent = eventService.saveEvent(event);
 

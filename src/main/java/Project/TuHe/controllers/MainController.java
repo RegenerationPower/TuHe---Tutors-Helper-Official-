@@ -15,25 +15,11 @@ public class MainController {
     private EventRepository eventRepository;
     @Autowired
     private EventService eventService;
-    @GetMapping("/")
-    public String Main(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model){
-        model.addAttribute("name", name);
-        return "mainPage";
-    }
 
-    @RequestMapping("/cal")
+    @RequestMapping("/")
     public String Cal(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model){
         model.addAttribute("name", name);
         return "calendarPage";
     }
 
-    @RestController
-    @RequestMapping("/api/events")
-    public class EventController {
-
-        @PostMapping
-        public EventEntity createEvent(@RequestBody EventEntity event) {
-            return eventService.saveEvent(event);
-        }
-    }
 }

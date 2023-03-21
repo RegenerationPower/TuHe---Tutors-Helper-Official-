@@ -2,10 +2,22 @@ package Project.TuHe.controllers;
 
 import Project.TuHe.entities.UserEntity;
 import Project.TuHe.exceptions.UserAlreadyExistException;
+import Project.TuHe.security.AuthenticationResponse;
+import Project.TuHe.security.JwtTokenUtil;
 import Project.TuHe.services.UserService;
 import Project.TuHe.validations.UserValidation;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,44 +25,75 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.sasl.AuthenticationException;
+
+
 @Controller
+@Lazy
 public class AuthorizationController {
     @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
     private UserService userService;
+
     @Autowired
     private UserValidation userValidation;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @RequestMapping(value = "/signUp")
-    public String register(UserEntity user, Model model, BindingResult bindingResult) throws UserAlreadyExistException {
+    public String register(@ModelAttribute("user") @Valid UserEntity user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "registerPage";
-       }
-        model.addAttribute("user", new UserEntity());
-        // set to omit error
-        user.setPassword("12345");
+        }
 
+        // Set password
+        String plainPassword = user.getPassword();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode(user.getPassword());
+        String encodedPassword = encoder.encode(plainPassword);
         user.setPassword(encodedPassword);
-        try {
-            userService.registration(user);
-        }
-        catch (Exception e) {
-//            throw new UserAlreadyExistException("User with such username already exist");
-            System.out.println("So Bad");
-        }
-        return "registerPage";
+
+        userService.registration(user);
+
+        // Authenticate user
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return "redirect:/";
     }
 
-
-    @RequestMapping(value = "/login")
-    public String login(@ModelAttribute("user") UserEntity user, BindingResult bindingResult) {
+    @GetMapping("/login")
+    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid username or password");
+        }
+        model.addAttribute("user", new UserEntity());
         return "loginPage";
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserEntity user) throws AuthenticationException {
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+            );
+        } catch (DisabledException e) {
+            throw new AuthenticationException("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new AuthenticationException("INVALID_CREDENTIALS", e);
+        }
+
+        final UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
+
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 
     @InitBinder
     private void bindValidator(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(userValidation);
     }
-
 }

@@ -3,6 +3,8 @@ package Project.TuHe;
 import Project.TuHe.entities.EventEntity;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EventEntityTest {
@@ -12,12 +14,12 @@ public class EventEntityTest {
         EventEntity event = new EventEntity();
         event.setId(1L);
         event.setTitle("Test Event");
-        event.setStartTime("2023-02-19 08:00:00");
-        event.setEndTime("2023-02-19 09:00:00");
+        event.setStartTime(LocalDateTime.parse("2023-02-20T08:00:00"));
+        event.setEndTime(LocalDateTime.parse("2023-02-20T09:00:00"));
 
         assertEquals(1L, event.getId());
         assertEquals("Test Event", event.getTitle());
-        assertEquals("2023-02-19 08:00:00", event.getStartTime());
-        assertEquals("2023-02-19 09:00:00", event.getEndTime());
+        assertEquals(LocalDateTime.parse("2023-02-20T08:00:00").toString(), event.getStartTime().toString());
+        assertEquals(LocalDateTime.parse("2023-02-20T09:00:00").toString(), event.getEndTime().toString());
     }
 }

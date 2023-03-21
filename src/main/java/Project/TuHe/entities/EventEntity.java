@@ -2,8 +2,11 @@ package Project.TuHe.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "event")
@@ -18,15 +21,22 @@ public class EventEntity {
     @NotEmpty(message = "Title is required")
     private String title;
 
-    @Column (nullable = false, length = 50)
-    @NotEmpty(message = "Start date is required")
-    private String startTime;
+    @Column (nullable = false, length = 50, name = "start_time")
+    @NotNull(message = "Start date is required")
+    private LocalDateTime startTime;
 
-    @Column (nullable = false, length = 50)
-    @NotEmpty(message = "End date is required")
-    private String endTime;
+    @Column (nullable = false, length = 50, name = "end_time")
+    @NotNull(message = "End date is required")
+    private LocalDateTime endTime;
 
     public EventEntity() {
+    }
+
+    public EventEntity(Long id, String title, LocalDateTime startTime, LocalDateTime endTime) {
+        this.id = id;
+        this.title = title;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public Long getId() {
@@ -45,19 +55,20 @@ public class EventEntity {
         this.title = title;
     }
 
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
+
 }
