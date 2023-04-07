@@ -1,8 +1,6 @@
 package Project.TuHe.controllers;
 
 import Project.TuHe.entities.UserEntity;
-import Project.TuHe.exceptions.UserAlreadyExistException;
-import Project.TuHe.security.AuthenticationResponse;
 import Project.TuHe.security.JwtTokenUtil;
 import Project.TuHe.services.UserService;
 import Project.TuHe.validations.UserValidation;
@@ -10,22 +8,16 @@ import Project.TuHe.validations.UserValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.security.sasl.AuthenticationException;
 
 
 @Controller
@@ -72,7 +64,7 @@ public class AuthorizationController {
         return "loginPage";
     }
 
-    @PostMapping("/authenticate")
+/*    @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserEntity user) throws AuthenticationException {
 
         try {
@@ -90,7 +82,7 @@ public class AuthorizationController {
         final String token = jwtTokenUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthenticationResponse(token));
-    }
+    }*/
 
     @InitBinder
     private void bindValidator(WebDataBinder webDataBinder) {

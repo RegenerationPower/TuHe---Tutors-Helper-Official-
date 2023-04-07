@@ -1,78 +1,85 @@
-$(document).ready(function() {
-    let calendar = $('#calendar').fullCalendar({
-        header: {
+document.addEventListener('DOMContentLoaded', function() {
+    let eventData;
+    let calendarEl = document.getElementById('calendar');
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         views: {
             agendaDay: {
                 type: 'agenda',
-                duration: { days: 1 }
+                duration: {
+                    days: 1
+                }
             }
         },
-        defaultView: 'month',
+        selectMirror: true,
         selectable: true,
         editable: true,
         eventOverlap: false,
-        // events: '/api/events/',
-        events: [
-            {
-                title: 'Event 1',
-                start: '2023-03-01T10:00:00',
-                end: '2023-03-01T12:00:00'
-            },
-            {
-                title: 'Event 2',
-                start: '2023-03-05T14:00:00',
-                end: '2023-03-05T16:00:00'
-            },
-            {
-                title: 'All Day Event',
-                start: '2023-03-08',
-                allDay: true
-            }
-        ],
-        eventClick: function(calEvent, jsEvent, view) {
-            $('#eventId').val(calEvent.id);
-            $('#eventTitle').val(calEvent.title);
-            $('#eventStart').val(calEvent.start.format('YYYY-MM-DD HH:mm:ss'));
-            $('#eventEnd').val(calEvent.end.format('YYYY-MM-DD HH:mm:ss'));
-            $('#eventModal').show();
+        eventTimeFormat: { // Для формату 24-годинного формату
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: false
         },
-        select: function(start, end, jsEvent, view) {
-            let title = prompt('Enter Event Title:');
-            if (title) {
-                let eventStart = start.format('YYYY-MM-DDTHH:mm:ss');
-                let eventEnd = end.format('YYYY-MM-DDTHH:mm:ss');
-                let eventData = {
-                    title: title,
-                    startTime: eventStart,
-                    endTime: eventEnd
-                };
-                $.ajax({
-                    url: '/api/events/',
-                    method: 'POST',
-                    data: eventData,
-                    success: function(response) {
-                        let calendarEventEntity = {
-                            id: response.id,
-                            title: response.title,
-                            startTime: moment(response.startTime),
-                            endTime: moment(response.endTime)
-                        };
-                        calendar.fullCalendar('renderEvent', calendarEventEntity, true);
-                    }
+        events: function(fetchInfo, successCallback, failureCallback) {
+            fetch('/api/events')
+                .then(response => response.json())
+                .then(data => {
+                    const events = data.map(event => ({
+                        id: event.id,
+                        title: event.title,
+                        start: event.startTime,
+                        end: event.endTime,
+                    }));
+                    successCallback(events);
+                })
+                .catch(error => {
+                    console.error('Error fetching events', error);
+                    failureCallback(error);
                 });
-            }
-            calendar.fullCalendar('unselect');
+        },
+        eventDidMount: function(info) {
+            console.log('Event did mount:', info.event);
+        },
+        dateClick: function(info) {
+            console.log('Date clicked:', info.dateStr);
+        },
+        // events: [{
+        //     id: 1,
+        //     title: 'Event 1',
+        //     start: '2023-04-01T10:00:00',
+        //     end: '2023-04-01T12:00:00'
+        // },
+        //     {
+        //         id: 2,
+        //         title: 'Event 2',
+        //         start: '2023-04-05T14:00:00',
+        //         end: '2023-04-05T16:00:00'
+        //     },
+        //     {
+        //         id: 3,
+        //         title: 'All Day Event',
+        //         start: '2023-04-08',
+        //         allDay: true
+        //     }
+        // ],
+        select: function(info) {
+            let eventStart = info.startStr;
+            let eventEnd = info.endStr;
+            $('#eventTitle').val('');
+            $('#eventStart').val(eventStart);
+            $('#eventEnd').val(eventEnd);
+            $('#eventModal').show();
+            calendar.unselect();
         }
-
     });
-
     $('.close').click(function() {
         $('#eventModal').hide();
     });
+
 
     $('#editForm').submit(function(event) {
         event.preventDefault();
@@ -80,17 +87,32 @@ $(document).ready(function() {
         let eventTitle = $('#eventTitle').val();
         let eventStart = $('#eventStart').val();
         let eventEnd = $('#eventEnd').val();
-        let eventData = {
+        eventData = { // присвоєння значення глобальній змінній
             id: eventId,
             title: eventTitle,
-            start: eventStart,
-            end: eventEnd
+            startTime: new Date(eventStart).toISOString(),
+            endTime: new Date(eventEnd).toISOString()
         };
-        let updatedEvent = calendar.getEventById(eventData.id);
-        updatedEvent.setProp('title', eventData.title);
-        updatedEvent.setStart(eventData.start);
-        updatedEvent.setEnd(eventData.end);
-        calendar.updateEvent(updatedEvent);
+        calendar.addEvent(eventData);
+        console.log(eventData)
         $('#eventModal').hide();
+
+        $.ajax({
+            url: '/api/events', // URL контроллера
+            type: 'POST', // метод HTTP запиту
+            data: JSON.stringify(eventData), // дані для передачі
+            contentType: 'application/json', // тип даних, що надсилаються на сервер
+            success: function(response) {
+                console.log(response); // виведення відповіді в консолі
+                calendar.addEvent(eventData); // додавання івенту до календаря
+                $('#eventModal').hide();
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText); // виведення помилки в консолі
+            }
+        });
     });
+
+    calendar.render();
 });
+
