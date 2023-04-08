@@ -3,14 +3,20 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title>Calendar Page</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
   <link rel="stylesheet" th:href="@{css/calendarPageStyle.css}">
   <script th:src="@{js/calendarPageScript.js}" defer></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js'></script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.min.css" media="print" />
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 
 
 </head>
@@ -20,16 +26,23 @@
 <div id="eventModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <h2>Edit Event</h2>
-    <form id="editForm">
+    <h2>Event Settings</h2>
+    <form id="eventForm">
       <input type="hidden" id="eventId" name="eventId" />
-      <label for="eventTitle">Title:</label>
-      <input type="text" id="eventTitle" name="eventTitle" />
-      <label for="eventStart">Start Date/Time:</label>
-      <input type="text" id="eventStart" name="eventStart" />
-      <label for="eventEnd">End Date/Time:</label>
-      <input type="text" id="eventEnd" name="eventEnd" />
-      <button type="submit">Save</button>
+      <div class="form-group">
+        <label for="eventTitle">Title</label>
+        <input type="text" class="form-control" id="eventTitle" placeholder="Enter event title">
+      </div>
+      <div class="form-group">
+        <label for="eventStart">Start date/time</label>
+        <input type="text" class="form-control datetimepicker" id="eventStart"  placeholder="Enter start date and time">
+      </div>
+      <div class="form-group">
+        <label for="eventEnd">End date/time</label>
+        <input type="text" class="form-control datetimepicker" id="eventEnd" placeholder="Enter end date and time">
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button id="deleteEventBtn" type="button" class="btn btn-danger">Delete Event</button>
     </form>
     <button class="close">Close</button>
   </div>

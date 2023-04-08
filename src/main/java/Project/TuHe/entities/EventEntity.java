@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "event")
@@ -21,18 +22,18 @@ public class EventEntity {
     @NotEmpty(message = "Title is required")
     private String title;
 
-    @Column (nullable = false, length = 50, name = "start_time")
+    @Column (nullable = false, length = 50, name = "startTime")
     @NotNull(message = "Start date is required")
-    private LocalDateTime startTime;
+    private Date startTime;
 
-    @Column (nullable = false, length = 50, name = "end_time")
+    @Column (nullable = false, length = 50, name = "endTime")
     @NotNull(message = "End date is required")
-    private LocalDateTime endTime;
+    private Date endTime;
 
     public EventEntity() {
     }
 
-    public EventEntity(Long id, String title, LocalDateTime startTime, LocalDateTime endTime) {
+    public EventEntity(Long id, String title, Date startTime, Date endTime) {
         this.id = id;
         this.title = title;
         this.startTime = startTime;
@@ -55,19 +56,19 @@ public class EventEntity {
         this.title = title;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

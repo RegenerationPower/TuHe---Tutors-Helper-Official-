@@ -1,96 +1,170 @@
-$(document).ready(function() {
-    let calendar = $('#calendar').fullCalendar({
-        header: {
+document.addEventListener('DOMContentLoaded', function() {
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm:ss',
+        useCurrent: false
+    });
+    $('#eventStart').datetimepicker({
+        format: 'Y-m-d H:i:s'
+    });
+
+    $('#eventEnd').datetimepicker({
+        format: 'Y-m-d H:i:s'
+    });
+    let eventData;
+    let calendarEl = document.getElementById('calendar');
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         views: {
             agendaDay: {
                 type: 'agenda',
-                duration: { days: 1 }
+                duration: {
+                    days: 1
+                }
             }
         },
-        defaultView: 'month',
+        selectMirror: true,
         selectable: true,
         editable: true,
         eventOverlap: false,
-        // events: '/api/events/',
-        events: [
-            {
-                title: 'Event 1',
-                start: '2023-03-01T10:00:00',
-                end: '2023-03-01T12:00:00'
-            },
-            {
-                title: 'Event 2',
-                start: '2023-03-05T14:00:00',
-                end: '2023-03-05T16:00:00'
-            },
-            {
-                title: 'All Day Event',
-                start: '2023-03-08',
-                allDay: true
-            }
-        ],
-        eventClick: function(calEvent, jsEvent, view) {
-            $('#eventId').val(calEvent.id);
-            $('#eventTitle').val(calEvent.title);
-            $('#eventStart').val(calEvent.start.format('YYYY-MM-DD HH:mm:ss'));
-            $('#eventEnd').val(calEvent.end.format('YYYY-MM-DD HH:mm:ss'));
-            $('#eventModal').show();
+        eventTimeFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: false
         },
-        select: function(start, end, jsEvent, view) {
-            let title = prompt('Enter Event Title:');
-            if (title) {
-                let eventStart = start.format('YYYY-MM-DDTHH:mm:ss');
-                let eventEnd = end.format('YYYY-MM-DDTHH:mm:ss');
-                let eventData = {
-                    title: title,
-                    startTime: eventStart,
-                    endTime: eventEnd
-                };
-                $.ajax({
-                    url: '/api/events/',
-                    method: 'POST',
-                    data: eventData,
-                    success: function(response) {
-                        let calendarEventEntity = {
-                            id: response.id,
-                            title: response.title,
-                            startTime: moment(response.startTime),
-                            endTime: moment(response.endTime)
-                        };
-                        calendar.fullCalendar('renderEvent', calendarEventEntity, true);
-                    }
+        events: function(fetchInfo, successCallback, failureCallback) {
+            fetch('/api/events')
+                .then(response => response.json())
+                .then(data => {
+                    const events = data.map(event => ({
+                        id: event.id,
+                        title: event.title,
+                        start: event.startTime,
+                        end: event.endTime,
+                    }));
+                    successCallback(events);
+                })
+                .catch(error => {
+                    console.error('Error fetching events', error);
+                    failureCallback(error);
                 });
-            }
-            calendar.fullCalendar('unselect');
+        },
+        eventDrop: function(info) {
+            let event = info.event;
+            fetch('/api/events/' + event.id, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: event.id,
+                    title: event.title,
+                    startTime: event.start.toISOString(),
+                    endTime: event.end.toISOString()
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Event updated:', data);
+                })
+                .catch(error => {
+                    console.error('Error updating event', error);
+                });
+        },
+
+        eventDidMount: function(info) {
+
+        },
+
+        eventClick: function(info) {
+            let event = info.event;
+            $('#eventId').val(event.id);
+            $('#eventTitle').val(event.title);
+            $('#eventStart').val(event.startStr.substring(0, 19).replace('T', ' '));
+            $('#eventEnd').val(event.endStr.substring(0, 19).replace('T', ' '));
+            $('#eventModal').show();
+            $('#deleteEventBtn').show();
+        },
+
+        dateClick: function(info) {
+            $('#deleteEventBtn').hide();
+        },
+        select: function(info) {
+            let eventStart = info.startStr;
+            let eventEnd = info.endStr;
+            $('#eventTitle').val('');
+            $('#eventStart').val(eventStart);
+            $('#eventEnd').val(eventEnd);
+            $('#eventModal').show();
+            calendar.unselect();
         }
-
     });
-
     $('.close').click(function() {
         $('#eventModal').hide();
     });
 
-    $('#editForm').submit(function(event) {
+
+    $('#eventForm').submit(function(event) {
         event.preventDefault();
         let eventId = $('#eventId').val();
         let eventTitle = $('#eventTitle').val();
         let eventStart = $('#eventStart').val();
         let eventEnd = $('#eventEnd').val();
-        let eventData = {
+
+        let url = '/api/events';
+        let httpMethod = 'POST';
+
+        if (eventId) {
+            url = url + '/' + eventId;
+            httpMethod = 'PATCH';
+        }
+
+        eventData = {
             id: eventId,
             title: eventTitle,
-            start: eventStart,
-            end: eventEnd
+            startTime: new Date(eventStart).toISOString(),
+            endTime: new Date(eventEnd).toISOString()
         };
-        let updatedEvent = calendar.getEventById(eventData.id);
-        updatedEvent.setProp('title', eventData.title);
-        updatedEvent.setStart(eventData.start);
-        updatedEvent.setEnd(eventData.end);
-        calendar.updateEvent(updatedEvent);
+        calendar.addEvent(eventData);
+        console.log(eventData)
         $('#eventModal').hide();
+
+        $.ajax({
+            url: url,
+            type: httpMethod,
+            data: JSON.stringify(eventData),
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                calendar.refetchEvents();
+                $('#eventModal').hide();
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+            }
+        });
     });
+
+    $('#deleteEventBtn').click(function() {
+        let eventId = $('#eventId').val();
+        let url = '/api/events/' + eventId;
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function(response) {
+                console.log(response);
+                calendar.refetchEvents();
+                $('#eventModal').hide();
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    });
+
+
+    calendar.render();
 });

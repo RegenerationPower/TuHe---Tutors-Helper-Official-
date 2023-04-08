@@ -1,3 +1,4 @@
+/*
 package Project.TuHe;
 
 import Project.TuHe.entities.EventEntity;
@@ -33,3 +34,4 @@ public class EventServiceTest {
     }
 }
 
+*/

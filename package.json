@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "devDependencies": {
     "jest": "^29.4.3"
+  },
+  "dependencies": {
+    "jquery": "^3.6.4"
   }
 }
