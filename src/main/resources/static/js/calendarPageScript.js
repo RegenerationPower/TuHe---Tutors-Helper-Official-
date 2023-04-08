@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
+    $('.datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm:ss',
+        useCurrent: false
+    });
+    $('#eventStart').datetimepicker({
+        format: 'Y-m-d H:i:s'
+    });
+
+    $('#eventEnd').datetimepicker({
+        format: 'Y-m-d H:i:s'
+    });
     let eventData;
     let calendarEl = document.getElementById('calendar');
     let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -19,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectable: true,
         editable: true,
         eventOverlap: false,
-        eventTimeFormat: { // Для формату 24-годинного формату
+        eventTimeFormat: {
             hour: 'numeric',
             minute: '2-digit',
             meridiem: false
@@ -41,31 +52,46 @@ document.addEventListener('DOMContentLoaded', function() {
                     failureCallback(error);
                 });
         },
+        eventDrop: function(info) {
+            let event = info.event;
+            fetch('/api/events/' + event.id, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: event.id,
+                    title: event.title,
+                    startTime: event.start.toISOString(),
+                    endTime: event.end.toISOString()
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Event updated:', data);
+                })
+                .catch(error => {
+                    console.error('Error updating event', error);
+                });
+        },
+
         eventDidMount: function(info) {
-            console.log('Event did mount:', info.event);
+
         },
+
+        eventClick: function(info) {
+            let event = info.event;
+            $('#eventId').val(event.id);
+            $('#eventTitle').val(event.title);
+            $('#eventStart').val(event.startStr.substring(0, 19).replace('T', ' '));
+            $('#eventEnd').val(event.endStr.substring(0, 19).replace('T', ' '));
+            $('#eventModal').show();
+            $('#deleteEventBtn').show();
+        },
+
         dateClick: function(info) {
-            console.log('Date clicked:', info.dateStr);
+            $('#deleteEventBtn').hide();
         },
-        // events: [{
-        //     id: 1,
-        //     title: 'Event 1',
-        //     start: '2023-04-01T10:00:00',
-        //     end: '2023-04-01T12:00:00'
-        // },
-        //     {
-        //         id: 2,
-        //         title: 'Event 2',
-        //         start: '2023-04-05T14:00:00',
-        //         end: '2023-04-05T16:00:00'
-        //     },
-        //     {
-        //         id: 3,
-        //         title: 'All Day Event',
-        //         start: '2023-04-08',
-        //         allDay: true
-        //     }
-        // ],
         select: function(info) {
             let eventStart = info.startStr;
             let eventEnd = info.endStr;
@@ -81,13 +107,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    $('#editForm').submit(function(event) {
+    $('#eventForm').submit(function(event) {
         event.preventDefault();
         let eventId = $('#eventId').val();
         let eventTitle = $('#eventTitle').val();
         let eventStart = $('#eventStart').val();
         let eventEnd = $('#eventEnd').val();
-        eventData = { // присвоєння значення глобальній змінній
+
+        let url = '/api/events';
+        let httpMethod = 'POST';
+
+        if (eventId) {
+            url = url + '/' + eventId;
+            httpMethod = 'PATCH';
+        }
+
+        eventData = {
             id: eventId,
             title: eventTitle,
             startTime: new Date(eventStart).toISOString(),
@@ -98,21 +133,38 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#eventModal').hide();
 
         $.ajax({
-            url: '/api/events', // URL контроллера
-            type: 'POST', // метод HTTP запиту
-            data: JSON.stringify(eventData), // дані для передачі
-            contentType: 'application/json', // тип даних, що надсилаються на сервер
+            url: url,
+            type: httpMethod,
+            data: JSON.stringify(eventData),
+            contentType: 'application/json',
             success: function(response) {
-                console.log(response); // виведення відповіді в консолі
-                calendar.addEvent(eventData); // додавання івенту до календаря
+                console.log(response);
+                calendar.refetchEvents();
                 $('#eventModal').hide();
             },
             error: function(xhr) {
-                console.log(xhr.responseText); // виведення помилки в консолі
+                console.log(xhr.responseText);
             }
         });
     });
 
+    $('#deleteEventBtn').click(function() {
+        let eventId = $('#eventId').val();
+        let url = '/api/events/' + eventId;
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function(response) {
+                console.log(response);
+                calendar.refetchEvents();
+                $('#eventModal').hide();
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    });
+
+
     calendar.render();
 });
-
