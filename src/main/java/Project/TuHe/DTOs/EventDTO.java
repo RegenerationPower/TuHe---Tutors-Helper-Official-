@@ -1,52 +1,48 @@
-package Project.TuHe.entities;
+package Project.TuHe.DTOs;
 
-import jakarta.persistence.*;
+import Project.TuHe.entities.EventEntity;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-
 
 import java.util.Date;
 
-@Entity
-@Table(name = "event")
-@Setter
-@Getter
-public class EventEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class EventDTO {
     private Long id;
-    @Column (nullable = false, length = 50, name = "title")
-    @NotEmpty(message = "Title is required")
+    @NotEmpty
     private String title;
 
-    @Column (nullable = false, length = 50, name = "startTime")
-    @NotNull(message = "Start date is required")
+    @NotNull
     private Date startTime;
 
-    @Column (nullable = false, length = 50, name = "endTime")
-    @NotNull(message = "End date is required")
+    @NotNull
     private Date endTime;
 
     @NotNull
     private double cost;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    @NotNull
-    private UserEntity user;
-
-    public EventEntity() {
-    }
-
-    public EventEntity(Long id, String title, Date startTime, Date endTime, double cost) {
-        this.id = id;
+    public EventDTO(String title, Date startTime, Date endTime, double cost) {
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
         this.cost = cost;
+    }
+
+    public EventDTO() {
+
+    }
+
+    public static EventDTO fromEntity(EventEntity entity) {
+        return new EventDTO(entity.getTitle(), entity.getStartTime(), entity.getEndTime(), entity.getCost());
+    }
+
+    public EventEntity toEntity() {
+        EventEntity entity = new EventEntity();
+        entity.setTitle(title);
+        entity.setStartTime(startTime);
+        entity.setEndTime(endTime);
+        return entity;
     }
 
     public Long getId() {
@@ -56,7 +52,6 @@ public class EventEntity {
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getTitle() {
         return title;
     }
@@ -87,13 +82,5 @@ public class EventEntity {
 
     public void setCost(double cost) {
         this.cost = cost;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
     }
 }

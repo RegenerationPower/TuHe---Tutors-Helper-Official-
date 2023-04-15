@@ -1,0 +1,3 @@
+ALTER TABLE event
+#     ADD cost DOUBLE NOT NULL AFTER endTime;
+    ADD userId BIGINT NOT NULL AFTER cost;

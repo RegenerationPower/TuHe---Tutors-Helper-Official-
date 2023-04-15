@@ -1,7 +1,11 @@
+#calendar {
+    margin-top: 5%;
+}
+
 #eventModal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 100;
     padding-top: 100px;
     left: 0;
     top: 0;
@@ -56,4 +60,29 @@
     font-weight: bold;
     color: #000;
     cursor: pointer;
+}
+
+#total {
+    position: fixed;
+    left: 40%;
+    right: 40%;
+    width: 20%;
+    height: 50px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 100;
+}
+
+.total-card {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f7f7f7;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.invisible-div {
+    position: relative;
+    visibility: hidden;
 }

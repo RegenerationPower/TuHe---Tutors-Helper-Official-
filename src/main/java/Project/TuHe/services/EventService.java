@@ -8,8 +8,8 @@ import java.util.List;
 
 @Service
 public interface EventService {
-    List<EventDTO> getAllEvents();
-    EventEntity saveEvent(EventDTO eventDTO);
-    EventEntity updateEvent(Long id, EventDTO eventDTO);
+    List<EventDTO> getAllEvents(Long userId);
+    EventDTO saveEvent(Long userId, EventDTO eventDTO);
+    EventDTO updateEvent(Long userId, Long id, EventDTO eventDTO);
     void deleteEvent(Long id);
 }

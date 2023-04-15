@@ -1,4 +1,4 @@
-package Project.TuHe.security;
+package Project.TuHe.mappers;
 
 import Project.TuHe.DTOs.EventDTO;
 import Project.TuHe.entities.EventEntity;

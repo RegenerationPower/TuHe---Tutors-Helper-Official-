@@ -1,11 +1,14 @@
 package Project.TuHe.details;
 
 import Project.TuHe.entities.UserEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
+@Component
 public class CustomUserDetails implements UserDetails {
 
     private final UserEntity user;
@@ -20,14 +23,36 @@ public class CustomUserDetails implements UserDetails {
         return null;
     }
 
-    @Override
     public String getPassword() {
         return user.getPassword();
     }
 
-    @Override
     public String getUsername() {
         return user.getUsername();
+    }
+
+    public Long getId() {
+        return user.getId();
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public void setUsername(String username) {
+        user.setUsername(username);
+    }
+
+    public void setPassword(String password) {
+        user.setPassword(password);
+    }
+
+    public void setEmail(String email) {
+        user.setEmail(email);
     }
 
     @Override
