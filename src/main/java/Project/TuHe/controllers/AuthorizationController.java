@@ -1,12 +1,14 @@
 package Project.TuHe.controllers;
 
+import Project.TuHe.details.CustomUserDetails;
 import Project.TuHe.entities.UserEntity;
+import Project.TuHe.mappers.CustomUserDetailsMapper;
 import Project.TuHe.security.JwtTokenUtil;
 import Project.TuHe.services.UserService;
 import Project.TuHe.validations.UserValidation;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,16 +25,24 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @Lazy
 public class AuthorizationController {
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private UserService userService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final UserService userService;
+    private final UserValidation userValidation;
+    private final AuthenticationManager authenticationManager;
+    private final ModelMapper modelMapper;
+    private final CustomUserDetails customUserDetails;
+    private final CustomUserDetailsMapper customUserDetailsMapper;
 
-    @Autowired
-    private UserValidation userValidation;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    public AuthorizationController(JwtTokenUtil jwtTokenUtil, UserService userService, UserValidation userValidation, AuthenticationManager authenticationManager, ModelMapper modelMapper, CustomUserDetails customUserDetails, CustomUserDetailsMapper customUserDetailsMapper) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userService = userService;
+        this.userValidation = userValidation;
+        this.authenticationManager = authenticationManager;
+        this.modelMapper = modelMapper;
+        this.customUserDetails = customUserDetails;
+        this.customUserDetailsMapper = customUserDetailsMapper;
+    }
 
     @RequestMapping(value = "/signUp")
     public String register(@ModelAttribute("user") @Valid UserEntity user, BindingResult bindingResult, Model model) {
@@ -40,15 +50,12 @@ public class AuthorizationController {
             return "registerPage";
         }
 
-        // Set password
         String plainPassword = user.getPassword();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(plainPassword);
         user.setPassword(encodedPassword);
-
         userService.registration(user);
 
-        // Authenticate user
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -62,6 +69,13 @@ public class AuthorizationController {
         }
         model.addAttribute("user", new UserEntity());
         return "loginPage";
+    }
+
+    @GetMapping("/api/user")
+    @ResponseBody
+    public UserEntity getUserDetails(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return customUserDetailsMapper.toUserEntity(userDetails);
     }
 
 /*    @PostMapping("/authenticate")

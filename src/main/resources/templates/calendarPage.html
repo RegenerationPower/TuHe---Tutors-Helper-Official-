@@ -21,6 +21,12 @@
 
 </head>
 <body>
+<div class="total-card">
+  <div id="total-cost" class="total-card-item">Total cost:</div><br>
+  <div id="paid-cost" class="total-card-item">Paid cost:</div>
+</div>
+
+<div class="invisible-div">Invisible</div>
 <div id="calendar"></div>
 
 <div id="eventModal" class="modal">
@@ -40,6 +46,14 @@
       <div class="form-group">
         <label for="eventEnd">End date/time</label>
         <input type="text" class="form-control datetimepicker" id="eventEnd" placeholder="Enter end date and time">
+      </div>
+      <div class="form-group">
+        <label for="eventCost">Cost</label>
+        <input type="text" class="form-control" id="eventCost" placeholder="Enter cost" pattern="[0-9]+([.][0-9]+)?">
+      </div>
+      <div class="form-group">
+        <label for="eventPaid">Paid</label>
+        <input type="checkbox" id="eventPaid">
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
       <button id="deleteEventBtn" type="button" class="btn btn-danger">Delete Event</button>

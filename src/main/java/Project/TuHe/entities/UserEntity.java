@@ -1,31 +1,41 @@
 package Project.TuHe.entities;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
-import static javax.crypto.Cipher.SECRET_KEY;
+import java.util.List;
+
 
 @Entity
 @Table(name = "user")
 @Setter
 @Getter
+@Component
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(name = "userId")
+    private Long userId;
+
+    @Column(nullable = false, unique = true, length = 50, name = "email")
     @NotEmpty(message = "Email is required")
     private String email;
-    @Column (unique = true, nullable = false, length = 50)
+
+    @Column (unique = true, nullable = false, length = 50, name = "username")
     @NotEmpty(message = "UserName is required")
     private String username;
-    @Column (nullable = false, length = 100)
+
+    @Column (nullable = false, length = 100,  name = "password")
     @NotEmpty(message = "Password is required")
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<EventEntity> events;
 
     public UserEntity() {
     }
@@ -35,11 +45,11 @@ public class UserEntity {
     }
 
     public Long getId() {
-        return id;
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -64,5 +74,13 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<EventEntity> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
     }
 }
