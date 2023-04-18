@@ -2,7 +2,6 @@
     font-family: "DejaVu Sans Mono", monospace;
 }
 
-/* links code */
 a:link {
     color: darkmagenta;
     background-color: transparent;
@@ -53,7 +52,6 @@ body.backAnimation{
     100%{background:lightpink;}
 }
 
-/* footer code */
 .footer-basic {
     padding:20px 0;
     background-color: rgba(0, 125, 250);

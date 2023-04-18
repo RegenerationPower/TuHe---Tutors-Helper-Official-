@@ -37,9 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
             minute: '2-digit',
             meridiem: false
         },
+
         viewDidMount: function(info) {
             localStorage.setItem('lastView', info.view.type);
         },
+
         initialView: lastView || 'dayGridMonth',
         events: function(fetchInfo, successCallback, failureCallback) {
             fetch('/api/user')
@@ -61,6 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 start: event.startTime,
                                 end: event.endTime,
                                 cost: event.cost,
+                                paid: event.paid,
+                                className: (event.paid === 1 || event.paid === true) ? 'fc-h-event event-green fc-event-main' : ''
                             }));
                             successCallback(events);
                         })
@@ -73,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error getting user id', error);
                 });
         },
+
         eventDrop: function(info) {
             let event = info.event;
             const userId = localStorage.getItem('userId');
@@ -91,7 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: event.title,
                     startTime: event.start.toISOString(),
                     endTime: event.end.toISOString(),
-                    cost: event.cost
+                    cost: event.extendedProps.cost,
+                    paid: event.extendedProps.paid ? 1 : 0
                 })
             })
                 .then(response => response.json())
@@ -104,13 +110,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         },
 
-
         eventDidMount: function(info) {
             let totalCost = 0;
+            let paidCost = 0;
             calendar.getEvents().forEach(function(event) {
                 totalCost += event.extendedProps.cost;
+                if (event.extendedProps.paid === 1 || event.extendedProps.paid === true) {
+                    paidCost += event.extendedProps.cost;
+                }
             });
-            document.getElementById('total').innerHTML = 'Total cost: ' + totalCost;
+            document.getElementById('total-cost').innerHTML = 'Total cost: ' + totalCost;
+            document.getElementById('paid-cost').innerHTML = 'Paid cost: ' + paidCost;
         },
 
         eventClick: function(info) {
@@ -122,21 +132,32 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#eventCost').val(event.extendedProps.cost);
             $('#eventModal').show();
             $('#deleteEventBtn').show();
+            const paid = info.event.extendedProps.paid;
+            if (paid === 1 || paid === true) {
+                $('#eventPaid').prop('checked', true);
+            } else {
+                $('#eventPaid').prop('checked', false);
+            }
+            calendar.refetchEvents();
         },
 
         dateClick: function(info) {
             $('#deleteEventBtn').hide();
         },
+
         select: function(info) {
             let eventStart = info.startStr;
             let eventEnd = info.endStr;
             let eventCost = info.cost;
+            let eventPaid = info.paid;
             $('#eventTitle').val('');
             $('#eventStart').val(eventStart);
             $('#eventEnd').val(eventEnd);
             $('#eventCost').val(eventCost);
+            $('#eventPaid').val(eventPaid);
             $('#eventModal').show();
             calendar.unselect();
+            calendar.refetchEvents();
         }
     });
 
@@ -151,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let eventStart = $('#eventStart').val();
         let eventEnd = $('#eventEnd').val();
         let eventCost = $('#eventCost').val();
+        let eventPaid = $('#eventPaid').is(':checked');
 
         if (eventTitle === '' || eventStart === '' || eventEnd === '' || eventCost === '') {
             alert('Please fill in all fields!');
@@ -176,12 +198,9 @@ document.addEventListener('DOMContentLoaded', function() {
             title: eventTitle,
             startTime: new Date(eventStart).toISOString(),
             endTime: new Date(eventEnd).toISOString(),
-            cost: eventCost
+            cost: eventCost,
+            paid: eventPaid ? 1 : 0
         };
-
-        calendar.addEvent(eventData);
-        console.log(eventData);
-        $('#eventModal').hide();
 
         $.ajax({
             url: url,
@@ -190,6 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: 'application/json',
             success: function(response) {
                 console.log(response);
+                calendar.addEvent(eventData);
                 calendar.refetchEvents();
                 $('#eventModal').hide();
                 $('#eventId').val('');
@@ -198,8 +218,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(xhr.responseText);
             }
         });
-    });
 
+        $('#eventModal').hide();
+    });
 
     $('#deleteEventBtn').click(function() {
         let eventId = $('#eventId').val();
@@ -218,7 +239,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
 
     calendar.render();
 });

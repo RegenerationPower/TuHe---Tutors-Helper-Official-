@@ -3,9 +3,9 @@ package Project.TuHe.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jdk.jfr.BooleanFlag;
 import lombok.Getter;
 import lombok.Setter;
-
 
 import java.util.Date;
 
@@ -31,7 +31,13 @@ public class EventEntity {
     private Date endTime;
 
     @NotNull
-    private double cost;
+    @Column (name = "cost")
+    private Double cost;
+
+    //@NotNull
+    @BooleanFlag
+    @Column (name = "paid")
+    private Boolean paid;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -41,12 +47,13 @@ public class EventEntity {
     public EventEntity() {
     }
 
-    public EventEntity(Long id, String title, Date startTime, Date endTime, double cost) {
+    public EventEntity(Long id, String title, Date startTime, Date endTime, Double cost, Boolean paid) {
         this.id = id;
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
         this.cost = cost;
+        this.paid = paid;
     }
 
     public Long getId() {
@@ -81,19 +88,23 @@ public class EventEntity {
         this.endTime = endTime;
     }
 
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
     public UserEntity getUser() {
         return user;
     }
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
     }
 }

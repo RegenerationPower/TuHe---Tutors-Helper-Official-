@@ -1,8 +1,6 @@
 package Project.TuHe.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static javax.crypto.Cipher.SECRET_KEY;
 
 @Entity
 @Table(name = "user")

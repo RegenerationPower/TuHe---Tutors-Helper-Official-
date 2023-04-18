@@ -20,13 +20,17 @@ public class EventDTO {
     private Date endTime;
 
     @NotNull
-    private double cost;
+    private Double cost;
 
-    public EventDTO(String title, Date startTime, Date endTime, double cost) {
+    //@NotNull
+    private Boolean paid;
+
+    public EventDTO(String title, Date startTime, Date endTime, Double cost, Boolean paid) {
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
         this.cost = cost;
+        this.paid = paid;
     }
 
     public EventDTO() {
@@ -34,7 +38,7 @@ public class EventDTO {
     }
 
     public static EventDTO fromEntity(EventEntity entity) {
-        return new EventDTO(entity.getTitle(), entity.getStartTime(), entity.getEndTime(), entity.getCost());
+        return new EventDTO(entity.getTitle(), entity.getStartTime(), entity.getEndTime(), entity.getCost(), entity.getPaid());
     }
 
     public EventEntity toEntity() {
@@ -42,6 +46,8 @@ public class EventDTO {
         entity.setTitle(title);
         entity.setStartTime(startTime);
         entity.setEndTime(endTime);
+        entity.setCost(cost);
+        entity.setPaid(paid);
         return entity;
     }
 
@@ -80,7 +86,15 @@ public class EventDTO {
         return cost;
     }
 
-    public void setCost(double cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
+    }
+
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
     }
 }

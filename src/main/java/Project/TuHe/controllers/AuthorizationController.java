@@ -50,15 +50,12 @@ public class AuthorizationController {
             return "registerPage";
         }
 
-        // Set password
         String plainPassword = user.getPassword();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(plainPassword);
         user.setPassword(encodedPassword);
-
         userService.registration(user);
 
-        // Authenticate user
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -80,10 +77,6 @@ public class AuthorizationController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         return customUserDetailsMapper.toUserEntity(userDetails);
     }
-
-
-
-
 
 /*    @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserEntity user) throws AuthenticationException {

@@ -52,6 +52,7 @@ public class EventServiceImpl implements EventService {
         existingEvent.setStartTime(eventDTO.getStartTime());
         existingEvent.setEndTime(eventDTO.getEndTime());
         existingEvent.setCost(eventDTO.getCost());
+        existingEvent.setPaid(eventDTO.getPaid());
         existingEvent = eventRepository.save(existingEvent);
         return modelMapper.map(existingEvent, EventDTO.class);
     }
