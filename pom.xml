@@ -142,7 +142,11 @@
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 			<version>2.5.4</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.sonarsource.scanner.maven</groupId>
+			<artifactId>sonar-maven-plugin</artifactId>
+			<version>3.9.1.2184</version>
+		</dependency>
 
 	</dependencies>
 
@@ -159,5 +163,17 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<sonar.host.url>
+					http://myserver:9000
+				</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
 </project>
