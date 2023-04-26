@@ -9,12 +9,13 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>Project</groupId>
-	<artifactId>TuHe</artifactId>
+	<artifactId>TuHe---Tutors-Helper-Official-</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>TuHe</name>
+	<name>TuHe---Tutors-Helper-Official-</name>
 	<description>TuHe development project</description>
 	<properties>
 		<java.version>17</java.version>
+		<spring-boot.build-image.imageName>tuhe.com:5000/app/tuhe:latest</spring-boot.build-image.imageName>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -45,17 +46,19 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<version>8.0.32</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>9.16.0</version>
+			<version>9.8.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+			<version>9.8.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -147,6 +150,12 @@
 			<artifactId>sonar-maven-plugin</artifactId>
 			<version>3.9.1.2184</version>
 		</dependency>
+		<dependency>
+			<groupId>io.zonky.test</groupId>
+			<artifactId>embedded-database-spring-test</artifactId>
+			<version>2.2.0</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 
@@ -160,6 +169,18 @@
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<version>9.8.1</version>
+				<configuration>
+					<url>jdbc:mysql://localhost:3306/tuhedb</url>
+					<user>root</user>
+					<password>dodik2000</password>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>${mysql.driver.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -173,6 +194,10 @@
 				<sonar.host.url>
 					http://myserver:9000
 				</sonar.host.url>
+				<mysql.driver.version>
+					8.0.32
+				</mysql.driver.version>
+
 			</properties>
 		</profile>
 	</profiles>
