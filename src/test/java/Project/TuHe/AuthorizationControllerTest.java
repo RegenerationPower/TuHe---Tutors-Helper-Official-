@@ -2,6 +2,7 @@ package Project.TuHe;
 
 import Project.TuHe.controllers.AuthorizationController;
 import Project.TuHe.entities.UserEntity;
+import Project.TuHe.exceptions.UserAlreadyExistException;
 import Project.TuHe.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,7 +34,7 @@ public class AuthorizationControllerTest {
     private Model model;
 
     @Test
-    public void testRegister_SuccessfulRegistration_RedirectToHomePage() {
+    public void testRegister_SuccessfulRegistration_RedirectToHomePage() throws UserAlreadyExistException {
         UserEntity user = new UserEntity();
         user.setEmail("test@example.com");
         user.setUsername("testuser");
@@ -41,16 +42,16 @@ public class AuthorizationControllerTest {
 
         when(bindingResult.hasErrors()).thenReturn(false);
 
-        String result = authorizationController.register(user, bindingResult, model);
+        String result = authorizationController.register(user, bindingResult);
 
         assertEquals("redirect:/", result);
         verify(bindingResult, times(1)).hasErrors();
-        verify(userService, times(1)).registration(user);
+        verify(userService, times(1)).registration(user, bindingResult);
         verify(model, times(0)).addAttribute(eq("error"), anyString());
     }
 
     @Test
-    public void testRegister_ValidationErrors_ReturnRegisterPage() {
+    public void testRegister_ValidationErrors_ReturnRegisterPage() throws UserAlreadyExistException {
         UserEntity user = new UserEntity();
         user.setEmail("test@example.com");
         user.setUsername("testuser");
@@ -58,11 +59,11 @@ public class AuthorizationControllerTest {
 
         when(bindingResult.hasErrors()).thenReturn(true);
 
-        String result = authorizationController.register(user, bindingResult, model);
+        String result = authorizationController.register(user, bindingResult);
 
         assertEquals("registerPage", result);
         verify(bindingResult, times(1)).hasErrors();
-        verify(userService, times(0)).registration(user);
+        verify(userService, times(0)).registration(user, bindingResult);
         verify(model, times(0)).addAttribute(eq("error"), anyString());
     }
 

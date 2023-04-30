@@ -21,8 +21,11 @@
 
 </head>
 <body>
+<button id="logout-button">Logout</button>
+
 <div class="total-card">
-  <div id="total-cost" class="total-card-item">Total cost:</div><br>
+  <div id="welcome-name" class="total-card-item">Welcome <span id="username" th:text="${userName}"></span></div><br>
+  <div id="total-cost" class="total-card-item">Total cost:</div>
   <div id="paid-cost" class="total-card-item">Paid cost:</div>
 </div>
 

@@ -1,4 +1,4 @@
-/*create table hibernate_sequence (
+create table hibernate_sequence (
     next_val bigint
 ) engine=MyISAM;
 
@@ -27,4 +27,4 @@ CREATE TABLE event (
                       cost DOUBLE not null,
                       userId BIGINT not null,
                       PRIMARY KEY (id)
-) engine=MyISAM;*/
+) engine=MyISAM;

@@ -40,7 +40,11 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public Boolean userWithSuchUsernameExist(String username) {
+    public Boolean userWithSuchEmailExist(String email) {
+        return false;
+    }
+
+    public boolean userWithSuchUsernameExist(String username) {
         return false;
     }
 

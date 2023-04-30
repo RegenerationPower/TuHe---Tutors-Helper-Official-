@@ -81,6 +81,11 @@
     z-index: 100;
 }
 
+.invisible-div {
+    position: relative;
+    visibility: hidden;
+}
+
 #total-cost {
     top: 0;
 }
@@ -89,12 +94,65 @@
     top: 5%;
 }
 
-.invisible-div {
-    position: relative;
-    visibility: hidden;
+#welcome-name {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#username {
+    font-style: italic;
 }
 
 .fc-h-event.event-green .fc-event-main {
     background-color: lightgreen !important;
     color: black !important;
+}
+
+#logout-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: lightgrey;
+    color: #222222;
+    border: 2px solid #222222;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.5s ease-in-out;
+}
+
+#logout-button:hover {
+    background-color: #222222;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+
+@media (max-width: 1900px) {
+    .invisible-div {
+        margin-bottom: 90px;
+    }
+}
+
+@media (max-width: 1150px) {
+    .invisible-div {
+        margin-bottom: 90px;
+    }
+
+    .total-card div {
+        font-size: 80%; !important;
+    }
+
+    #welcome-name {
+        font-size: 80%;  !important;
+    }
+
+    #username {
+        font-size: 100%; !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .total-card div {
+        font-size: 70%; !important;
+    }
 }

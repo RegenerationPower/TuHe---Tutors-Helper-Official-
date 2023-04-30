@@ -5,11 +5,13 @@ import Project.TuHe.entities.UserEntity;
 public class UserModel {
     private Long id;
     private String username;
+    private String email;
 
     public static UserModel toModel(UserEntity entity) {
         UserModel model = new UserModel();
         model.setId(entity.getId());
         model.setUsername(entity.getUsername());
+        model.setEmail(entity.getEmail());
         return model;
     }
 
@@ -32,5 +34,12 @@ public class UserModel {
         this.username = username;
     }
 
+    public String getEmail(){
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 }

@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         initialView: lastView || 'dayGridMonth',
         events: function(fetchInfo, successCallback, failureCallback) {
-            fetch('/api/user')
+            fetch('/api/users')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Request failed');
@@ -219,7 +219,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        $('#eventModal').hide();
     });
 
     $('#deleteEventBtn').click(function() {
@@ -241,4 +240,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
+});
+
+document.getElementById('logout-button').addEventListener('click', function() {
+    localStorage.clear();
+    window.location.href = '/logout';
 });

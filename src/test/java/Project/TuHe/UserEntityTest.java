@@ -60,7 +60,7 @@ class UserEntityTest {
 	}
 
 	@Test
-	public void testUserWithSuchUsernameExist() {
+	public void testUserWithSuchEmailExist() {
 		String username = "john.doe";
 		assertFalse(user.userWithSuchUsernameExist(username));
 	}

@@ -18,12 +18,12 @@
         </div>
         <!-- Form code -->
         <div>
-            <form action="#" th:action="@{/signUp}" method="post" th:object="${user}">
+            <form action="#" th:action="@{/signUp}" method="post" th:object="${user}" id="register-form">
             <table th:class="registerTable">
                 <tr>
                     <td class="form-control-plaintext">Enter Username:</td>
                     <td><input type="text" required placeholder="Enter Username here" id="inputUsername" class="form-control form-control-sm" th:field="*{username}" /></td>
-<!--                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p></td></tr>-->
+                    <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                 </tr>
                 <tr>
                     <td class="form-control-plaintext">Enter Password:</td>
@@ -39,14 +39,14 @@
                 <tr>
                     <td class="form-control-plaintext">Enter Email:</td>
                     <td><input type="email" required placeholder="Enter Email here" id="inputEmail" class="form-control form-control-sm" th:field="*{email}" /></td>
+                    <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                 </tr>
-<!--                <tr class="error"><td></td><td><p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p></td></tr>-->
                 <tr>
                     <!-- Empty for buttons location-->
                     <td></td>
                     <td>
                         <input type="reset" value="Clear Form" onclick="clearFunction()" class="btn" />
-                        <input type="submit" value="Register" onclick="registration()" class="btn" /></td>
+                        <input type="submit" value="Register" onclick="validateForm()" class="btn" id="register-btn" /></td>
                 </tr>
             </table>
                 <div class="linkDiv fst-italic"><a th:href="login">Already have an account?</a></div>
