@@ -16,12 +16,12 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/events")
-public class EventController {
+public class EventRestController {
     private final EventService eventService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public EventController(EventService eventService, ModelMapper modelMapper) {
+    public EventRestController(EventService eventService, ModelMapper modelMapper) {
         this.eventService = eventService;
         this.modelMapper = modelMapper;
     }

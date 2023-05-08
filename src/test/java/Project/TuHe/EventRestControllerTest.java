@@ -1,7 +1,7 @@
 package Project.TuHe;
 
 import Project.TuHe.DTOs.EventDTO;
-import Project.TuHe.controllers.EventController;
+import Project.TuHe.controllers.EventRestController;
 import Project.TuHe.entities.EventEntity;
 import Project.TuHe.services.EventService;
 import org.junit.jupiter.api.Test;
@@ -24,10 +24,10 @@ import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
-public class EventControllerTest {
+public class EventRestControllerTest {
 
     @InjectMocks
-    private EventController eventController;
+    private EventRestController eventRestController;
 
     @Mock
     private EventService eventService;
@@ -45,7 +45,7 @@ public class EventControllerTest {
         when(modelMapper.map(any(), any())).thenReturn(new EventEntity());
 
         // Act
-        ResponseEntity<List<EventEntity>> responseEntity = eventController.getAllEvents(userId);
+        ResponseEntity<List<EventEntity>> responseEntity = eventRestController.getAllEvents(userId);
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -65,7 +65,7 @@ public class EventControllerTest {
         when(modelMapper.map(any(), any())).thenReturn(new EventEntity());
 
         // Act
-        ResponseEntity<EventEntity> responseEntity = eventController.createEvent(userId, eventDTO);
+        ResponseEntity<EventEntity> responseEntity = eventRestController.createEvent(userId, eventDTO);
 
         // Assert
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -85,7 +85,7 @@ public class EventControllerTest {
         when(modelMapper.map(any(), any())).thenReturn(new EventEntity());
 
         // Act
-        ResponseEntity<EventEntity> responseEntity = eventController.updateEvent(userId, eventId, eventDTO);
+        ResponseEntity<EventEntity> responseEntity = eventRestController.updateEvent(userId, eventId, eventDTO);
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -101,7 +101,7 @@ public class EventControllerTest {
         doNothing().when(eventService).deleteEvent(eventId);
 
         // Act
-        ResponseEntity<?> responseEntity = eventController.deleteEvent(eventId);
+        ResponseEntity<?> responseEntity = eventRestController.deleteEvent(eventId);
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
@@ -115,7 +115,7 @@ public class EventControllerTest {
         doThrow(NoSuchElementException.class).when(eventService).deleteEvent(eventId);
 
         // Act
-        ResponseEntity<?> responseEntity = eventController.deleteEvent(eventId);
+        ResponseEntity<?> responseEntity = eventRestController.deleteEvent(eventId);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());

@@ -111,14 +111,24 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         eventDidMount: function(info) {
-            let totalCost = 0;
-            let paidCost = 0;
+            var totalCost = 0;
+            var paidCost = 0;
+            var activeStartDate = calendar.view.activeStart;
+            var activeEndDate = calendar.view.activeEnd;
+
             calendar.getEvents().forEach(function(event) {
-                totalCost += event.extendedProps.cost;
-                if (event.extendedProps.paid === 1 || event.extendedProps.paid === true) {
-                    paidCost += event.extendedProps.cost;
+                var eventStartDate = event.start;
+                var eventEndDate = event.end || event.start;
+
+                if (eventEndDate >= activeStartDate && eventStartDate <= activeEndDate) {
+                    totalCost += event.extendedProps.cost;
+
+                    if (event.extendedProps.paid === 1 || event.extendedProps.paid === true) {
+                        paidCost += event.extendedProps.cost;
+                    }
                 }
             });
+
             document.getElementById('total-cost').innerHTML = 'Total cost: ' + totalCost;
             document.getElementById('paid-cost').innerHTML = 'Paid cost: ' + paidCost;
         },
@@ -221,6 +231,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
 
+    calendar.on('datesSet', function(info) {
+        document.getElementById('total-cost').innerHTML = 'Total cost:';
+        document.getElementById('paid-cost').innerHTML = 'Paid cost:';
+    });
+
     $('#deleteEventBtn').click(function() {
         let eventId = $('#eventId').val();
         let url = '/api/events/' + eventId;
@@ -245,4 +260,65 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('logout-button').addEventListener('click', function() {
     localStorage.clear();
     window.location.href = '/logout';
+});
+
+var popupTrigger = document.querySelector('.popup-trigger');
+var popupWindow = document.querySelector('.popup-window');
+var closeButton = document.querySelector('.close-button');
+
+var closePopup = function() {
+    popupWindow.style.opacity = '0';
+
+    setTimeout(function() {
+        popupWindow.style.visibility = 'hidden';
+    }, 300);
+};
+
+popupTrigger.addEventListener('click', function() {
+    popupWindow.style.visibility = 'visible';
+    popupWindow.style.opacity = '1';
+});
+
+document.addEventListener('click', function(event) {
+    if (!popupTrigger.contains(event.target) && !popupWindow.contains(event.target)) {
+        closePopup();
+    }
+});
+
+closeButton.addEventListener('click', function() {
+    closePopup();
+});
+
+
+const addStudentButton = document.getElementById('add-student-button');
+const studentInput = document.getElementById('student-input');
+
+// Обробник події натискання кнопки
+addStudentButton.addEventListener('click', () => {
+    const eventId = 73; // Замініть на відповідне значення userId
+    const studentName = studentInput.value;
+
+    // Створення об'єкту, який містить дані студента
+    const studentData = {
+        studentName: studentName
+    };
+
+    // Виконання запиту POST до сервера
+    fetch(`/api/students`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(studentData)
+    })
+        .then(response => response.json())
+        .then(student => {
+            // Обробка відповіді від сервера
+            console.log('Created student:', student);
+            // Виконайте необхідні дії з отриманим об'єктом студента
+        })
+        .catch(error => {
+            console.error('Error creating student:', error);
+            // Обробка помилки, якщо така виникла
+        });
 });

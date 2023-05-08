@@ -1,3 +1,13 @@
+html {
+    scrollbar-width: none; /* Для Firefox */
+}
+
+/* Для Chrome, Edge та Safari */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
 #calendar {
     margin-top: 5%;
 }
@@ -126,6 +136,71 @@
     cursor: pointer;
 }
 
+.popup-window {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 20%;
+    height: 75%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 10px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 99;
+}
+
+.popup-trigger {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 125px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    border-radius: 10px;
+    border-top: 1px solid #444;
+    border-left: 1px solid #444;
+    border-bottom: 1px solid #444;
+    z-index: 98;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid #666;
+    z-index: 149;
+}
+
+.open-text {
+    font-size: 20px;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
 
 @media (max-width: 1900px) {
     .invisible-div {

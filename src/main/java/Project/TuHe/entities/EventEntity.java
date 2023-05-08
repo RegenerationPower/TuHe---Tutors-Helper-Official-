@@ -44,6 +44,10 @@ public class EventEntity {
     @NotNull
     private UserEntity user;
 
+    @ManyToOne
+    @JoinColumn(name = "studentId")
+    private StudentEntity student;
+
     public EventEntity() {
     }
 

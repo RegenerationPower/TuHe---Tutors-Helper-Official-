@@ -13,8 +13,9 @@ public class StudentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    @Column (nullable = false, length = 50)
+    @Column (nullable = false, length = 50, name = "studentName")
     @NotEmpty(message = "Student name is required")
     private String studentName;
 

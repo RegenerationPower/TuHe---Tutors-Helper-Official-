@@ -26,5 +26,6 @@ CREATE TABLE event (
                       endTime DATETIME not null,
                       cost DOUBLE not null,
                       userId BIGINT not null,
+                      studentId BIGINT,
                       PRIMARY KEY (id)
 ) engine=MyISAM;

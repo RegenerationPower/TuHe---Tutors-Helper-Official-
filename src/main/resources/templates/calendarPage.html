@@ -23,6 +23,18 @@
 <body>
 <button id="logout-button">Logout</button>
 
+<div class="popup-trigger">
+  <span class="arrow"></span>
+  <span class="open-text">Open</span>
+</div>
+
+<div class="popup-window" id="popup-window">
+  <button class="close-button">&times;</button>
+  <h3>Students List</h3>
+  <input type="text" id="student-input" placeholder="Enter student name">
+  <button id="add-student-button">Add Student</button>
+</div>
+
 <div class="total-card">
   <div id="welcome-name" class="total-card-item">Welcome <span id="username" th:text="${userName}"></span></div><br>
   <div id="total-cost" class="total-card-item">Total cost:</div>
