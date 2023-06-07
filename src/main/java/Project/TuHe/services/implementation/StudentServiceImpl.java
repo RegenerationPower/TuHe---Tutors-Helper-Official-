@@ -1,7 +1,6 @@
 package Project.TuHe.services.implementation;
 
-import Project.TuHe.DTOs.EventDTO;
-import Project.TuHe.entities.EventEntity;
+import Project.TuHe.DTOs.StudentDTO;
 import Project.TuHe.entities.StudentEntity;
 import Project.TuHe.entities.UserEntity;
 import Project.TuHe.repositories.StudentRepository;
@@ -27,16 +26,19 @@ public class StudentServiceImpl implements StudentService {
         this.modelMapper = modelMapper;
     }
 
-/*    public List<StudentEntity> getAllStudents(Long userId) {
+    public List<StudentDTO> getAllStudents(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
         List<StudentEntity> students = studentRepository.findByUser(user);
-        return students.stream().map(student -> modelMapper.map(student, StudentEntity.class)).collect(Collectors.toList());
-    }*/
+        return students.stream().map(student -> modelMapper.map(student, StudentDTO.class)).collect(Collectors.toList());
+    }
 
-    public StudentEntity saveStudent(StudentEntity studentEntity) {
-        StudentEntity student = modelMapper.map(studentEntity, StudentEntity.class);
+    public StudentDTO saveStudent(Long userId, StudentDTO studentDTO) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+        StudentEntity student = modelMapper.map(studentDTO, StudentEntity.class);
+        student.setUser(user);
         student = studentRepository.save(student);
-        return modelMapper.map(student, StudentEntity.class);
+        return modelMapper.map(student, StudentDTO.class);
     }
 }

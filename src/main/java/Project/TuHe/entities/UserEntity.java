@@ -37,6 +37,10 @@ public class UserEntity {
     @JsonIgnore
     private List<EventEntity> events;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<StudentEntity> students;
+
     public UserEntity() {
     }
 

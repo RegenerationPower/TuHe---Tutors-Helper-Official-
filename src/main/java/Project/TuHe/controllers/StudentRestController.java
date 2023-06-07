@@ -1,6 +1,7 @@
 package Project.TuHe.controllers;
 
 import Project.TuHe.DTOs.EventDTO;
+import Project.TuHe.DTOs.StudentDTO;
 import Project.TuHe.entities.EventEntity;
 import Project.TuHe.entities.StudentEntity;
 import Project.TuHe.services.StudentService;
@@ -26,19 +27,20 @@ public class StudentRestController {
         this.modelMapper = modelMapper;
     }
 
-/*    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<StudentEntity>> getAllStudents(@PathVariable("userId") Long userId) {
-        List<StudentEntity> students = studentService.getAllStudents(userId);
-        List<StudentEntity> studentsList = students.stream()
+        List<StudentDTO> studentsDTO = studentService.getAllStudents(userId);
+        List<StudentEntity> studentsEntities = studentsDTO.stream()
                 .filter(Objects::nonNull)
                 .map(studentEntity -> modelMapper.map(studentEntity, StudentEntity.class))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(studentsList);
-    }*/
+        return ResponseEntity.ok(studentsEntities);
+    }
 
-    @PostMapping("")
-    public ResponseEntity<StudentEntity> createStudent(@RequestBody @Valid StudentEntity studentEntity) {
-        StudentEntity student = studentService.saveStudent(studentEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(student);
+    @PostMapping("/users/{userId}")
+    public ResponseEntity<StudentEntity> createStudent(@PathVariable("userId") Long userId, @RequestBody @Valid StudentDTO studentDTO) {
+        StudentDTO createdStudentDTO = studentService.saveStudent(userId, studentDTO);
+        StudentEntity createdStudentEntity = modelMapper.map(createdStudentDTO, StudentEntity.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudentEntity);
     }
 }

@@ -2,6 +2,7 @@ package Project.TuHe.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,11 @@ public class StudentEntity {
     @Column (nullable = false, length = 50, name = "studentName")
     @NotEmpty(message = "Student name is required")
     private String studentName;
+
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "userId")
+    private UserEntity user;
 
     public StudentEntity() {
     }

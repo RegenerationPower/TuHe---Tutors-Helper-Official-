@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
-/*    List<StudentEntity> findByUser(UserEntity user);*/
+    List<StudentEntity> findByUser(UserEntity user);
 }

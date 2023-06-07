@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 end: event.endTime,
                                 cost: event.cost,
                                 paid: event.paid,
+                                studentId: event.studentId,
                                 className: (event.paid === 1 || event.paid === true) ? 'fc-h-event event-green fc-event-main' : ''
                             }));
                             successCallback(events);
@@ -148,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 $('#eventPaid').prop('checked', false);
             }
+            $('#studentList').val(event.extendedProps.studentId);
             calendar.refetchEvents();
         },
 
@@ -160,11 +162,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let eventEnd = info.endStr;
             let eventCost = info.cost;
             let eventPaid = info.paid;
+            let studentId = info.studentId;
             $('#eventTitle').val('');
             $('#eventStart').val(eventStart);
             $('#eventEnd').val(eventEnd);
             $('#eventCost').val(eventCost);
             $('#eventPaid').val(eventPaid);
+            $('#studentId').val(studentId);
             $('#eventModal').show();
             calendar.unselect();
             calendar.refetchEvents();
@@ -177,12 +181,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#eventForm').submit(function(event) {
         event.preventDefault();
-        let eventId = $('#eventId').val();
         let eventTitle = $('#eventTitle').val();
         let eventStart = $('#eventStart').val();
         let eventEnd = $('#eventEnd').val();
         let eventCost = $('#eventCost').val();
         let eventPaid = $('#eventPaid').is(':checked');
+        let studentId = $('#studentList').val();
 
         if (eventTitle === '' || eventStart === '' || eventEnd === '' || eventCost === '') {
             alert('Please fill in all fields!');
@@ -198,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let httpMethod = 'POST';
         let url = '/api/events/users/' + userId;
 
+        const eventId = $('#eventId').val();
         if (eventId) {
             httpMethod = 'PATCH';
             url += '/' + eventId;
@@ -209,7 +214,8 @@ document.addEventListener('DOMContentLoaded', function() {
             startTime: new Date(eventStart).toISOString(),
             endTime: new Date(eventEnd).toISOString(),
             cost: eventCost,
-            paid: eventPaid ? 1 : 0
+            paid: eventPaid ? 1 : 0,
+            studentId: studentId
         };
 
         $.ajax({
@@ -289,22 +295,48 @@ closeButton.addEventListener('click', function() {
     closePopup();
 });
 
+loadStudents();
+
+function loadStudents() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        console.error('User id is not set in local storage');
+        return;
+    }
+
+    fetch(`/api/students/users/${userId}`)
+        .then(response => response.json())
+        .then(students => {
+            const studentList = document.getElementById('studentList');
+
+            while (studentList.firstChild) {
+                studentList.removeChild(studentList.firstChild);
+            }
+
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.studentId;
+                option.textContent = student.studentName;
+                studentList.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading students:', error);
+        });
+}
 
 const addStudentButton = document.getElementById('add-student-button');
 const studentInput = document.getElementById('student-input');
 
-// Обробник події натискання кнопки
 addStudentButton.addEventListener('click', () => {
-    const eventId = 73; // Замініть на відповідне значення userId
+    const userId = localStorage.getItem('userId');
     const studentName = studentInput.value;
 
-    // Створення об'єкту, який містить дані студента
     const studentData = {
         studentName: studentName
     };
 
-    // Виконання запиту POST до сервера
-    fetch(`/api/students`, {
+    fetch(`/api/students/users/${userId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -313,12 +345,11 @@ addStudentButton.addEventListener('click', () => {
     })
         .then(response => response.json())
         .then(student => {
-            // Обробка відповіді від сервера
             console.log('Created student:', student);
-            // Виконайте необхідні дії з отриманим об'єктом студента
+            loadStudents();
         })
         .catch(error => {
             console.error('Error creating student:', error);
-            // Обробка помилки, якщо така виникла
         });
 });
+

@@ -44,7 +44,7 @@ public class EventEntity {
     @NotNull
     private UserEntity user;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "studentId")
     private StudentEntity student;
 

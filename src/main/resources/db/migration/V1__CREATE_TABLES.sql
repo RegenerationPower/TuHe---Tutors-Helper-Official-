@@ -16,6 +16,7 @@ CREATE TABLE user (
 CREATE TABLE student (
                       id BIGINT NOT NULL AUTO_INCREMENT,
                       studentName varchar(50) not null,
+                      userId BIGINT not null,
                       PRIMARY KEY (id)
 ) engine=MyISAM;
 
