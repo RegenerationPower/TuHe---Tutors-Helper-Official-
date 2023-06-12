@@ -18,8 +18,8 @@ import java.util.List;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
-    private Long userId;
+    @Column(name = "id")
+    private Long id;
 
     @Column(nullable = false, unique = true, length = 50, name = "email")
     @NotEmpty(message = "Email is required")
@@ -41,9 +41,6 @@ public class UserEntity {
     @JsonIgnore
     private List<StudentEntity> students;
 
-    public UserEntity() {
-    }
-
     public Boolean userWithSuchEmailExist(String email) {
         return false;
     }
@@ -53,11 +50,11 @@ public class UserEntity {
     }
 
     public Long getId() {
-        return userId;
+        return id;
     }
 
-    public void setId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

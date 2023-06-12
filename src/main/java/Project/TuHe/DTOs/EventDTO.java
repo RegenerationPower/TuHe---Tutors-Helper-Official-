@@ -21,35 +21,10 @@ public class EventDTO {
 
     @NotNull
     private Double cost;
+    private Long userId;
+    private Long studentId;
 
-    //@NotNull
     private Boolean paid;
-
-    public EventDTO(String title, Date startTime, Date endTime, Double cost, Boolean paid) {
-        this.title = title;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.cost = cost;
-        this.paid = paid;
-    }
-
-    public EventDTO() {
-
-    }
-
-    public static EventDTO fromEntity(EventEntity entity) {
-        return new EventDTO(entity.getTitle(), entity.getStartTime(), entity.getEndTime(), entity.getCost(), entity.getPaid());
-    }
-
-    public EventEntity toEntity() {
-        EventEntity entity = new EventEntity();
-        entity.setTitle(title);
-        entity.setStartTime(startTime);
-        entity.setEndTime(endTime);
-        entity.setCost(cost);
-        entity.setPaid(paid);
-        return entity;
-    }
 
     public Long getId() {
         return id;
@@ -96,5 +71,21 @@ public class EventDTO {
 
     public void setPaid(Boolean paid) {
         this.paid = paid;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 }

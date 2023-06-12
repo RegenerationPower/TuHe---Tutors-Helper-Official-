@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 public class UserDTO {
 
-    private Long userId;
+    private Long id;
     @NotEmpty(message = "Email is required")
     private String email;
 
@@ -14,19 +14,12 @@ public class UserDTO {
     @NotEmpty(message = "Password is required")
     private String password;
 
-    public UserDTO(Long userId, String email, String username, String password) {
-        this.userId = userId;
-        this.email = email;
-        this.username = username;
-        this.password = password;
+    public Long getId() {
+        return id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {

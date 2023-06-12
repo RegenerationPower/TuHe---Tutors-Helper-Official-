@@ -7,7 +7,7 @@ public class StudentDTO {
     private Long id;
     @NotEmpty
     private String studentName;
-
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -23,5 +23,13 @@ public class StudentDTO {
 
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

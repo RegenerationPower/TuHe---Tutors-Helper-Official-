@@ -25,9 +25,6 @@ public class StudentEntity {
     @JoinColumn(name = "userId")
     private UserEntity user;
 
-    public StudentEntity() {
-    }
-
     public Long getId() {
         return id;
     }

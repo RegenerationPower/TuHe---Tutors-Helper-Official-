@@ -26,14 +26,16 @@ html {
 }
 
 #eventModal .modal-content {
-    background-color: #fefefe;
+    background-color: lightcyan;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     height: 80%;
-    border-radius: 10px;
+    border-radius: 20px;
     position: relative;
+    max-width: 400px;
+    max-height: 300px;
 }
 
 #eventModal .modal-content h2 {
@@ -55,11 +57,17 @@ html {
     display: block;
     margin: 20px auto 0;
     padding: 10px;
-    background-color: #4CAF50;
+    background: #ff7f50;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#eventModal .modal-content button[type=submit]:hover {
+    background-color: #ff6347;
+    border-color: #ff6347;
 }
 
 #eventModal .modal-content .close {
@@ -70,6 +78,11 @@ html {
     font-weight: bold;
     color: #000;
     cursor: pointer;
+}
+
+#eventModal .modal-content .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
 }
 
 .total-card {

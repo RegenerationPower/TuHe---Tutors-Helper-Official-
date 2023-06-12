@@ -48,18 +48,6 @@ public class EventEntity {
     @JoinColumn(name = "studentId")
     private StudentEntity student;
 
-    public EventEntity() {
-    }
-
-    public EventEntity(Long id, String title, Date startTime, Date endTime, Double cost, Boolean paid) {
-        this.id = id;
-        this.title = title;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.cost = cost;
-        this.paid = paid;
-    }
-
     public Long getId() {
         return id;
     }
@@ -111,4 +99,17 @@ public class EventEntity {
     public void setPaid(Boolean paid) {
         this.paid = paid;
     }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public StudentEntity getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentEntity student) {
+        this.student = student;
+    }
+
 }

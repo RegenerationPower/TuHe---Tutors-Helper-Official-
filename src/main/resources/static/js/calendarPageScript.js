@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return response.json();
                 })
                 .then(data => {
-                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('userId', data.id);
                     const userId = localStorage.getItem('userId');
                     fetch('/api/events/users/' + userId)
                         .then(response => response.json())
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 end: event.endTime,
                                 cost: event.cost,
                                 paid: event.paid,
-                                studentId: event.studentId,
+                                studentId: event.student ? event.student.id : null,
                                 className: (event.paid === 1 || event.paid === true) ? 'fc-h-event event-green fc-event-main' : ''
                             }));
                             successCallback(events);
@@ -112,14 +112,14 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         eventDidMount: function(info) {
-            var totalCost = 0;
-            var paidCost = 0;
-            var activeStartDate = calendar.view.activeStart;
-            var activeEndDate = calendar.view.activeEnd;
+            let totalCost = 0;
+            let paidCost = 0;
+            const activeStartDate = calendar.view.activeStart;
+            const activeEndDate = calendar.view.activeEnd;
 
             calendar.getEvents().forEach(function(event) {
-                var eventStartDate = event.start;
-                var eventEndDate = event.end || event.start;
+                const eventStartDate = event.start;
+                const eventEndDate = event.end || event.start;
 
                 if (eventEndDate >= activeStartDate && eventStartDate <= activeEndDate) {
                     totalCost += event.extendedProps.cost;
@@ -149,7 +149,13 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 $('#eventPaid').prop('checked', false);
             }
-            $('#studentList').val(event.extendedProps.studentId);
+            const studentId = event.extendedProps.studentId;
+            if (studentId === null || studentId === undefined) {
+                $('#studentList').val('none');
+            } else {
+                $('#studentList').val(studentId);
+            }
+
             calendar.refetchEvents();
         },
 
@@ -167,8 +173,8 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#eventStart').val(eventStart);
             $('#eventEnd').val(eventEnd);
             $('#eventCost').val(eventCost);
-            $('#eventPaid').val(eventPaid);
-            $('#studentId').val(studentId);
+            $('#eventPaid').prop('checked', false);
+            $('#studentList').val('none');
             $('#eventModal').show();
             calendar.unselect();
             calendar.refetchEvents();
@@ -203,9 +209,14 @@ document.addEventListener('DOMContentLoaded', function() {
         let url = '/api/events/users/' + userId;
 
         const eventId = $('#eventId').val();
+
         if (eventId) {
             httpMethod = 'PATCH';
             url += '/' + eventId;
+        }
+
+        if (studentId === 'none') {
+            studentId = null;
         }
 
         const eventData = {
@@ -268,14 +279,14 @@ document.getElementById('logout-button').addEventListener('click', function() {
     window.location.href = '/logout';
 });
 
-var popupTrigger = document.querySelector('.popup-trigger');
-var popupWindow = document.querySelector('.popup-window');
-var closeButton = document.querySelector('.close-button');
+const popupTrigger = document.querySelector('.popup-trigger');
+const popupWindow = document.querySelector('.popup-window');
+const closeButton = document.querySelector('.close-button');
 
-var closePopup = function() {
+const closePopup = function () {
     popupWindow.style.opacity = '0';
 
-    setTimeout(function() {
+    setTimeout(function () {
         popupWindow.style.visibility = 'hidden';
     }, 300);
 };
@@ -313,9 +324,14 @@ function loadStudents() {
                 studentList.removeChild(studentList.firstChild);
             }
 
+            const noneOption = document.createElement('option');
+            noneOption.value = 'none';
+            noneOption.textContent = 'None';
+            studentList.appendChild(noneOption);
+
             students.forEach(student => {
                 const option = document.createElement('option');
-                option.value = student.studentId;
+                option.value = student.id;
                 option.textContent = student.studentName;
                 studentList.appendChild(option);
             });
@@ -325,6 +341,7 @@ function loadStudents() {
         });
 }
 
+
 const addStudentButton = document.getElementById('add-student-button');
 const studentInput = document.getElementById('student-input');
 
@@ -333,7 +350,8 @@ addStudentButton.addEventListener('click', () => {
     const studentName = studentInput.value;
 
     const studentData = {
-        studentName: studentName
+        studentName: studentName,
+        user: userId
     };
 
     fetch(`/api/students/users/${userId}`, {
